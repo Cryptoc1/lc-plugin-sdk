@@ -89,7 +89,7 @@ $(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
 
       <_PluginProfileDir Condition=" '$(PluginStagingProfile)' != '' ">$(AppData)\Thunderstore Mod Manager\DataFolder\LethalCompany\profiles\$(PluginStagingProfile)</_PluginProfileDir>
       <PluginStagingDir Condition=" '$(PluginStagingProfile)' != '' ">$(_PluginProfileDir)\BepInEx\plugins\$(ThunderId)</PluginStagingDir>
-      <StagePlugin Condition=" '$(PluginStagingProfile)' != '' ">true</StagePlugin>
+      <StagePlugin Condition=" '$(StagePlugin)' != 'false' AND '$(PluginStagingProfile)' != '' ">true</StagePlugin>
 
       <_PluginPackage>$(_PublishDir)\$(ThunderId)-$(PluginVersion).zip</_PluginPackage>
 
