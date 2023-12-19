@@ -1,12 +1,12 @@
 namespace LethalCompany.SdkSample;
 
-[BepInPlugin(SamplePluginInfo.Identifier, SamplePluginInfo.Name, SamplePluginInfo.Version)]
-public sealed partial class SamplePlugin : BaseUnityPlugin
+[BepInPlugin(GeneratedPluginInfo.Identifier, GeneratedPluginInfo.Name, GeneratedPluginInfo.Version)]
+public sealed class SamplePlugin : BaseUnityPlugin
 {
     public void Awake()
     {
         _ = Harmony.CreateAndPatchAll(
             typeof(SamplePlugin).Assembly,
-            SamplePluginInfo.Identifier);
+            GeneratedPluginInfo.Identifier);
     }
 }

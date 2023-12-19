@@ -47,6 +47,8 @@ public sealed class SamplePlugin : BaseUnityPlugin
 > _The Sdk generates a `GeneratedPluginInfo` class from the metadata provided in your project for usage in code._
 > 
 > _The name of the generated class can be changed using the `<PluginInfoTypeName />` MSBuild property._
+>
+> _By default, the generated class is `internal static`, this can be changed using the `<PluginInfoTypeAccessModifier />` MSBuild property._
 
 
 ### Publish to Thunderstore

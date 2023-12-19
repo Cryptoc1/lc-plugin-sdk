@@ -4,10 +4,8 @@
   <PropertyGroup>
     <Title>Plugin SDK Sample</Title>
     <Description>Test plugin generated using the LethalCompany.Plugin.Sdk</Description>
+    <PackageId>LC_SDK_SAMPLE</PackageId>
     <PluginId>cryptoc1.lethalcompany.sdksample</PluginId>
-    <PluginInfoTypeName>SamplePluginInfo</PluginInfoTypeName>
-    <ThunderId>LC_SDK_SAMPLE</ThunderId>
-    <TargetFramework>netstandard2.1</TargetFramework>
     <Version>1.0.0</Version>
 
     <NoWarn>$(NoWarn);CA1822;</NoWarn>
