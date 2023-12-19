@@ -24,6 +24,14 @@
     <ThunderWebsiteUrl Condition=" '$(ThunderWebsiteUrl)' == '' ">$(PackageProjectUrl)</ThunderWebsiteUrl>
   </PropertyGroup>
 
+  <!-- NOTE: enforce optimizations in release mode  -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <IncludeSymbols>false</IncludeSymbols>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
     <Content Include="$(PluginChangelogFile)" Condition=" '$(PluginChangelogFile)' != '' AND Exists('$(MSBuildProjectDirectory)\$(PluginChangelogFile)') ">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -80,20 +88,6 @@ $(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
 
   <Target Name="_CopyToPublishDir" AfterTargets="Publish" BeforeTargets="PublishPlugin">
     <Copy SourceFiles="$(_GeneratedManifestPath)" DestinationFiles="$(PublishDir)manifest.json" SkipUnchangedFiles="true" Condition=" Exists('$(_GeneratedManifestPath)') " />
-  </Target>
-
-  <Target Name="PrepareForPluginCompile" BeforeTargets="Compile;CoreCompile">
-    <PropertyGroup>
-      <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-    </PropertyGroup>
-
-    <!-- NOTE: enforce optimizations in release mode  -->
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <DebugType>none</DebugType>
-      <DebugSymbols>false</DebugSymbols>
-      <IncludeSymbols>false</IncludeSymbols>
-      <Optimize>true</Optimize>
-    </PropertyGroup>
   </Target>
 
   <Target Name="PrepareForPluginPublish" BeforeTargets="PrepareForPublish">
