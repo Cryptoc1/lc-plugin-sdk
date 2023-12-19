@@ -113,10 +113,13 @@ $(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
 
     <!-- NOTE: we don't need this, BepInEx has it's own semantics for resolving runtime deps! -->
     <Delete Files="$(PublishDir)\$(AssemblyName).deps.json" />
+    <Delete Files="$(PublishDir)\*.pdb" Condition=" '$(Configuration)' == 'Release' " />
 
     <ItemGroup>
       <_PluginFiles Include="$(PublishDir)\**\*.*" Exclude="$(PublishDir)\$(AssemblyName).deps.json" />
       <_PluginFiles Remove="$(PublishDir)\$(AssemblyName).deps.json" />
+      <_PluginFiles Remove="$(PublishDir)\*.pdb" Condition=" '$(Configuration)' == 'Release' " />
+
       <_PluginStagingDirFiles Include="$(PluginStagingDir)\**.*" />
     </ItemGroup>
 
