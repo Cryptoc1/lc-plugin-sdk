@@ -75,6 +75,9 @@ public static class $(PluginInfoTypeName)
       <_PublishDir>$(PublishDir)</_PublishDir>
       <PublishDir>$(OutputPath)publish\</PublishDir>
 
+      <_PluginProfileDir Condition=" '$(PluginStagingProfile)' != '' ">$(AppData)\Thunderstore Mod Manager\DataFolder\LethalCompany\profiles\$(PluginStagingProfile)</_PluginProfileDir>
+      <PluginStagingDir Condition=" '$(PluginStagingProfile)' != '' ">$(_PluginProfileDir)\BepInEx\plugins\$(ThunderId)</PluginStagingDir>
+
       <_PluginPackage>$(_PublishDir)\$(ThunderId)-$(PluginVersion).zip</_PluginPackage>
 
       <!-- NOTE: a custom output path was NOT specified, place the archive in 'bin\', rather than 'bin\publish\' (can't place archive in the folder being archived) -->
@@ -93,17 +96,19 @@ public static class $(PluginInfoTypeName)
   </Target>
 
   <Target Name="PublishPlugin" AfterTargets="Publish">
-    <Warning Code="LC001" Text="Plugin was not built in Release mode, users may experience an impact to their performance!" Condition=" '$(Configuration)' != 'Release' AND '$(PublishPluginSuppressConfigurationWarning)' != 'true' AND '$(StagePlugin)' != 'true' " />
+    <Warning Code="LC001" Text="Plugin was not built in Release mode, users may experience an impact to their performance!" Condition=" '$(Configuration)' != 'Release' AND '$(StagePlugin)' != 'true' " />
 
-    <!-- NOTE: we don't need this, BepInEx has it's own runtime semantics for resolving deps! -->
+    <!-- NOTE: we don't need this, BepInEx has it's own semantics for resolving runtime deps! -->
     <Delete Files="$(PublishDir)\$(AssemblyName).deps.json" />
 
     <ItemGroup>
       <_PluginFiles Include="$(PublishDir)\**\*.*" Exclude="$(PublishDir)\$(AssemblyName).deps.json" />
       <_PluginFiles Remove="$(PublishDir)\$(AssemblyName).deps.json" />
-
       <_PluginStagingDirFiles Include="$(PluginStagingDir)\**.*" />
     </ItemGroup>
+
+    <Error Code="LC002" Text="Cannot Stage Plugin, PluginStagingProfile directory '$(_PluginProfileDir)' does not exist." Condition=" '$(StagePlugin)' == 'true' AND !Exists('$(_PluginProfileDir)') " />
+    <MakeDir Directories="$(PluginStagingDir)" />
 
     <Delete Files="@(_PluginStagingDirFiles)" Condition=" '$(StagePlugin)' == 'true' " />
     <Copy SourceFiles="@(_PluginFiles)" DestinationFiles="@(_PluginFiles -> '$(PluginStagingDir)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" Condition=" '$(StagePlugin)' == 'true' " />

@@ -40,7 +40,8 @@ public sealed class SamplePlugin : BaseUnityPlugin
 ```
 > _The Sdk generates a `GeneratedPluginInfo` class from the metadata provided in your project for usage in code._
 > 
-> _The name of the generated class can be changed using the `<PluginInfoTypeName></PluginInfoTypeName>` MSBuild property._
+> _The name of the generated class can be changed using the `<PluginInfoTypeName />` MSBuild property._
+
 
 ### Publish to Thunderstore
 
@@ -88,6 +89,17 @@ MSBuild version 17.8.3+195e7f5a3 for .NET
   Zipping directory ".\bin\Debug\netstandard2.1\publish\" to ".\bin\Debug\netstandard2.1\ExamplePlugin-1.0.0.zi
   p".
 ```
+
+#### Staging Plugins
+
+"Staging" a plugin refers to the process of publishing a plugin directly to a local Thunderstore profile.
+
+This can be done by setting two additional properties when using `dotnet publish`:
+```bash
+dotnet publish -p:StagePlugin=true -p:PluginStagingProfile="..."
+```
+
+> _It is recommended to set the `<PluginStagingProfile />` MSBuild property in a `.csproj.user` file._
 
 #### Specify Thunderstore Dependencies
 
