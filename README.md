@@ -1,12 +1,8 @@
-<h1 align="center">
-
-**LethalCompany.Plugin.Sdk**
-
+# LethalCompany.Plugin.Sdk
 [![NuGet](https://img.shields.io/nuget/vpre/LethalCompany.Plugin.Sdk)](https://www.nuget.org/packages/LethalCompany.Plugin.Sdk)
 [![Build](https://img.shields.io/github/actions/workflow/status/cryptoc1/lc-plugin-sdk/default.yml)](https://github.com/cryptoc1/lc-plugin-sdk/actions/workflows/default.yml)
 ![Language](https://img.shields.io/github/languages/top/cryptoc1/lc-plugin-sdk)
 
-</h1>
 
 An [MSBuild Sdk](https://learn.microsoft.com/en-us/visualstudio/msbuild/how-to-use-project-sdk?view=vs-2022) for creating Lethal Company mods that:
 
