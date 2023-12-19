@@ -1,4 +1,5 @@
-<Project>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition=" '$(MicrosoftCommonPropsHasBeenImported)' != 'true' "/>
 
   <!-- defaults -->
   <PropertyGroup>
@@ -43,7 +44,7 @@
 
   <!-- Thunderstore content -->
   <ItemGroup>
-    <ThunderReference Include="BepInEx-BepInExPack-5.4.2100" />
+    <ThunderDependency Include="BepInEx-BepInExPack-5.4.2100" />
 
     <Content Include="icon.png;CHANGELOG.md;README.md">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

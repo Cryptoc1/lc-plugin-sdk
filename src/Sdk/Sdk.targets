@@ -1,4 +1,5 @@
-<Project>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <Target Name="_GeneratePluginInfo" AfterTargets="PrepareForPluginCompile" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs">
     <PropertyGroup>
@@ -27,10 +28,10 @@ public static class $(PluginInfoTypeName)
     <PropertyGroup>
       <_GeneratedManifestText><![CDATA[{
     "name": "$(ThunderId)",
-    "dependencies": [$(ThunderReferences.Replace('%3B', ','))],
+    "dependencies": [$(ThunderDependencies.Replace('%3B', ','))],
     "description": "$(PluginDescription)",
     "version_number": "$(PluginVersion)",
-    "website_url": "$(PluginWebsiteUrl)"
+    "website_url": "$(ThunderWebsiteUrl)"
 }]]></_GeneratedManifestText>
 
       <_GeneratedManifestPath>$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json</_GeneratedManifestPath>
@@ -47,7 +48,7 @@ public static class $(PluginInfoTypeName)
     <Copy SourceFiles="$(_GeneratedManifestPath)" DestinationFiles="$(PublishDir)manifest.json" SkipUnchangedFiles="true" Condition=" Exists('$(_GeneratedManifestPath)') " />
   </Target>
 
-  <Target Name="PrepareForPluginCompile" BeforeTargets="Compile;GenerateMSBuildEditorConfigFileShouldRun">
+  <Target Name="PrepareForPluginCompile" BeforeTargets="Compile;GenerateMSBuildEditorConfigFileShouldRun;PrepareForPluginPublish">
     <!-- NOTE: set plugin prop defaults -->
     <PropertyGroup>
       <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
@@ -62,14 +63,14 @@ public static class $(PluginInfoTypeName)
       <PluginName Condition=" '$(PluginName)' == '' ">$(AssemblyName)</PluginName>
 
       <PluginVersion Condition=" '$(PluginVersion)' == '' ">$(Version)</PluginVersion>
-      <PluginWebsiteUrl Condition=" '$(PluginWebsiteUrl)' == '' ">$(PackageProjectUrl)</PluginWebsiteUrl>
 
       <ThunderId Condition=" '$(ThunderId)' == '' ">$(PluginId)</ThunderId>
-      <ThunderReferences>@(ThunderReference -> '"%(Filename)%(Extension)"')</ThunderReferences>
+      <ThunderDependencies>@(ThunderDependency -> '"%(Filename)%(Extension)"')</ThunderDependencies>
+      <ThunderWebsiteUrl Condition=" '$(ThunderWebsiteUrl)' == '' ">$(PackageProjectUrl)</ThunderWebsiteUrl>
     </PropertyGroup>
   </Target>
 
-  <Target Name="PrepareForPluginPublish" AfterTargets="PrepareForPluginCompile" BeforeTargets="PrepareForPublish">
+  <Target Name="PrepareForPluginPublish" BeforeTargets="PrepareForPublish">
     <PropertyGroup>
       <_PublishDir>$(PublishDir)</_PublishDir>
       <PublishDir>$(OutputPath)publish\</PublishDir>

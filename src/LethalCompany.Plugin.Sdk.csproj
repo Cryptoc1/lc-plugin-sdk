@@ -4,6 +4,7 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoWarn>$(NoWarn);NU5128;</NoWarn>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
@@ -13,7 +14,8 @@
     <Title>$(AssemblyName)</Title>
     <PackageId>$(AssemblyName)</PackageId>
     <PackageProjectUrl>https://github.com/cryptoc1/lc-plugin-sdk</PackageProjectUrl>
-    <PackageReadMe>README.md</PackageReadMe>
+    <PackageReadMeFile>README.md</PackageReadMeFile>
+    <PackageType>MSBuildSdk</PackageType>
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -26,8 +28,7 @@
 
   <ItemGroup>
     <Content Include="..\README.md" Pack="true" PackagePath="\" />
-    <Content Include="build\*" PackagePath="build\" />
-    <Content Include="buildMultiTargeting\*" PackagePath="buildMultiTargeting\" />
+    <Content Include="Sdk\*" PackagePath="Sdk\" />
   </ItemGroup>
 
   <ItemGroup>

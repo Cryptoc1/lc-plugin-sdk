@@ -1,17 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\src\build\LethalCompany.Plugin.Sdk.props" />
+<Project>
+  <Import Project="..\src\Sdk\Sdk.props" />
 
   <PropertyGroup>
     <Title>Plugin SDK Sample</Title>
-    <Description>Test plugin generated using the LC-Plugin-Sdk</Description>
+    <Description>Test plugin generated using the LethalCompany.Plugin.Sdk</Description>
     <PluginId>cryptoc1.lethalcompany.sdksample</PluginId>
     <PluginInfoTypeName>SamplePluginInfo</PluginInfoTypeName>
     <ThunderId>LC_SDK_SAMPLE</ThunderId>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Version>1.0.0</Version>
 
     <NoWarn>$(NoWarn);CA1822;</NoWarn>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
-  <Import Project="..\src\build\LethalCompany.Plugin.Sdk.targets" />
+  <Import Project="..\src\Sdk\Sdk.targets" />
 </Project>

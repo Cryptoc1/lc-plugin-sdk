@@ -1,3 +1,0 @@
-<Project>
-  <Import Project="..\build\LethalCompany.Plugin.Sdk.targets" />
-</Project>
