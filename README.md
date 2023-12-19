@@ -1,10 +1,19 @@
-# Lethal Company Plugin SDK
+<h1 align="center">
+
+**LethalCompany.Plugin.Sdk**
+
+[![NuGet](https://img.shields.io/nuget/vpre/LethalCompany.Plugin.Sdk)](https://www.nuget.org/packages/LethalCompany.Plugin.Sdk)
+[![Build](https://img.shields.io/github/actions/workflow/status/cryptoc1/lc-plugin-sdk/default.yml)](https://github.com/cryptoc1/lc-plugin-sdk/actions/workflows/default.yml)
+![Language](https://img.shields.io/github/languages/top/cryptoc1/lc-plugin-sdk)
+
+</h1>
 
 An [MSBuild Sdk](https://learn.microsoft.com/en-us/visualstudio/msbuild/how-to-use-project-sdk?view=vs-2022) for creating Lethal Company mods that:
 
 - Optimizes Build Defaults
 - Enables Modern Language Features with [`PolySharp`](https://github.com/Sergio0694/PolySharp)
 - References Publicized Binaries from [`LethalAPI.GameLibs`](https://github.com/dhkatz/LethalAPI.GameLibs)
+- References BepInEx packages from the [BepInEx Registry](https://nuget.bepinex.dev/)
 - Creates Thunderstore Packages with `dotnet publish`
 - Stages plugins to local a Thunderstore profile
 - And More...
