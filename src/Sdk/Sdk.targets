@@ -2,8 +2,6 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-
     <PluginDescription Condition=" '$(PluginDescription)' == '' ">$(Description)</PluginDescription>
     <PluginId Condition=" '$(PluginId)' == '' ">$(AssemblyName)</PluginId>
 
@@ -84,6 +82,20 @@ $(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
     <Copy SourceFiles="$(_GeneratedManifestPath)" DestinationFiles="$(PublishDir)manifest.json" SkipUnchangedFiles="true" Condition=" Exists('$(_GeneratedManifestPath)') " />
   </Target>
 
+  <Target Name="PrepareForPluginCompile" BeforeTargets="Compile;CoreCompile">
+    <PropertyGroup>
+      <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    </PropertyGroup>
+
+    <!-- NOTE: enforce optimizations in release mode  -->
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DebugType>none</DebugType>
+      <DebugSymbols>false</DebugSymbols>
+      <IncludeSymbols>false</IncludeSymbols>
+      <Optimize>true</Optimize>
+    </PropertyGroup>
+  </Target>
+
   <Target Name="PrepareForPluginPublish" BeforeTargets="PrepareForPublish">
     <PropertyGroup>
       <_PublishDir>$(PublishDir)</_PublishDir>
@@ -97,14 +109,6 @@ $(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
 
       <!-- NOTE: a custom output path was NOT specified, place the archive in 'bin\', rather than 'bin\publish\' (can't place archive in the folder being archived) -->
       <_PluginPackage Condition=" '$(PublishDir)' == '$(_PublishDir)' ">$(OutputPath)$(ThunderId)-$(PluginVersion).zip</_PluginPackage>
-    </PropertyGroup>
-
-    <!-- NOTE: enforce optimizations in release mode  -->
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <DebugType>none</DebugType>
-      <DebugSymbols>false</DebugSymbols>
-      <IncludeSymbols>false</IncludeSymbols>
-      <Optimize>true</Optimize>
     </PropertyGroup>
 
     <MakeDir Directories="$(_PublishDir)" />
