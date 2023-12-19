@@ -9,7 +9,6 @@
                 "publish",
                 "${workspaceFolder}/test/LethalCompany.SdkSample.csproj",
                 "/p:GenerateFullPaths=true",
-                "/p:StagePlugin=true",
                 "/consoleloggerparameters:NoSummary",
             ],
             "runOptions": {

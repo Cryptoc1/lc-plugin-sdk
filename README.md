@@ -5,7 +5,8 @@ An [MSBuild Sdk](https://learn.microsoft.com/en-us/visualstudio/msbuild/how-to-u
 - Optimizes Build Defaults
 - Enables Modern Language Features with [`PolySharp`](https://github.com/Sergio0694/PolySharp)
 - References Publicized Binaries from [`LethalAPI.GameLibs`](https://github.com/dhkatz/LethalAPI.GameLibs)
-- Creates Thunderstore Packages
+- Creates Thunderstore Packages with `dotnet publish`
+- Stages plugins to local a Thunderstore profile
 - And More...
 
 
@@ -45,7 +46,9 @@ public sealed class SamplePlugin : BaseUnityPlugin
 
 ### Publish to Thunderstore
 
-> _In order to create a Thunderstore Package, the Sdk requires that `icon.png`, `CHANGELOG.md` and `README.md` files exist at the project root._
+> _In order to create a Thunderstore Package, the Sdk requires that `icon.png` and `README.md` files exist at the project root._
+
+> _The location of the `CHANGELOG.md` and `README.md` files can be customized using the `<PluginChangelogFile />` and `<PluginReadMeFile />` MSBuild properties._
 
 In the `.csproj` of the plugin, provide the metadata used to generate a `manifest.json` for publishing:
 ```xml
@@ -71,7 +74,7 @@ The following `manifest.json` would be generated for the example metadata:
 ```json
 {
   "name": "ExamplePlugin",
-  "dependecies": ["BepInEx-BepInExPack-5.4.2100", "ExampleTeam-OtherPlugin-1.0.0"],
+  "dependencies": ["BepInEx-BepInExPack-5.4.2100", "ExampleTeam-OtherPlugin-1.0.0"],
   "description": "My example plugin!",
   "version_number": "1.0.0",
   "website_url": "https://example.com"
@@ -92,11 +95,9 @@ MSBuild version 17.8.3+195e7f5a3 for .NET
 
 #### Staging Plugins
 
-"Staging" a plugin refers to the process of publishing a plugin directly to a local Thunderstore profile.
-
-This can be done by setting two additional properties when using `dotnet publish`:
+"Staging" a plugin refers to the process of publishing a plugin directly to a local Thunderstore profile, and is performed by specifiying the `PluginStagingProfile` MSBuild property when publishing:
 ```bash
-dotnet publish -p:StagePlugin=true -p:PluginStagingProfile="..."
+dotnet publish -p:PluginStagingProfile="..."
 ```
 
 > _It is recommended to set the `<PluginStagingProfile />` MSBuild property in a `.csproj.user` file._
