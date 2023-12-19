@@ -73,7 +73,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
         with:
-          filter: global.json
+          sparse-checkout: global.json
 
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
