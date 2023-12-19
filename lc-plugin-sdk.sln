@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "src", "src\LethalCompany.Plugin.Sdk.csproj", "{85FB813D-1364-46E0-BA26-CA2FC2C273D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\LethalCompany.SdkSample.csproj", "{3B3EAC57-F36B-47B2-9B90-CE0D6ED5B638}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{85FB813D-1364-46E0-BA26-CA2FC2C273D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85FB813D-1364-46E0-BA26-CA2FC2C273D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85FB813D-1364-46E0-BA26-CA2FC2C273D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85FB813D-1364-46E0-BA26-CA2FC2C273D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B3EAC57-F36B-47B2-9B90-CE0D6ED5B638}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B3EAC57-F36B-47B2-9B90-CE0D6ED5B638}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B3EAC57-F36B-47B2-9B90-CE0D6ED5B638}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B3EAC57-F36B-47B2-9B90-CE0D6ED5B638}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A9AE9CE8-D868-4996-A57D-6E1938DE0227}
+	EndGlobalSection
+EndGlobal

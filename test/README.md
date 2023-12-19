@@ -1,0 +1,3 @@
+# Sample Plugin
+
+Hello, World!

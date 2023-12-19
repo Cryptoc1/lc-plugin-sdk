@@ -1,0 +1,63 @@
+<Project>
+
+  <!-- defaults -->
+  <PropertyGroup>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <Deterministic>true</Deterministic>
+    <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+    <Features>strict</Features>
+    <ImplicitUsings>true</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard2.1</TargetFramework>
+
+    <!-- analyzers -->
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <RunAnalyzers>true</RunAnalyzers>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+
+    <RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.bepinex.dev/v3/index.json;
+    </RestoreAdditionalProjectSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0" PrivateAssets="all" />
+    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
+
+    <PackageReference Include="LethalAPI.GameLibs" Version="45.1.0" PrivateAssets="all" ExcludeAssets="all" GeneratePathProperty="true">
+      <!-- NOTE: nuget would like to complain because we're targeting `netstandard2.1`, and GameLibs has an invalid target -->
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
+
+    <!-- NOTE: no need to reference stdlib! -->
+    <Reference Include="$(PkgLethalAPI_GameLibs)\lib\*.dll" Exclude="$(PkgLethalAPI_GameLibs)\lib\mscorlib.dll;$(PkgLethalAPI_GameLibs)\lib\netstandard.dll;$(PkgLethalAPI_GameLibs)\lib\System*.dll;" Private="false" />
+  </ItemGroup>
+
+  <!-- Thunderstore content -->
+  <ItemGroup>
+    <ThunderReference Include="BepInEx-BepInExPack-5.4.2100" />
+
+    <Content Include="icon.png;CHANGELOG.md;README.md">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="System.Collections" />
+    <Using Include="BepInEx" />
+    <Using Include="HarmonyLib" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' ">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+</Project>

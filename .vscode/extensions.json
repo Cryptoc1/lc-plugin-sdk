@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "ms-dotnettools.csdevkit",
+        "adrianwilczynski.user-secrets",
+        "editorconfig.editorconfig",
+        "selcukermaya.se-csproj-extensions",
+        "icsharpcode.ilspy-vscode"
+    ],
+}
