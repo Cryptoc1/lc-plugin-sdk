@@ -20,6 +20,7 @@
 
     <PluginVersion Condition=" '$(PluginVersion)' == '' ">$(Version)</PluginVersion>
 
+    <ThunderId Condition=" '$(ThunderId)' == '' ">$(PackageId)</ThunderId>
     <ThunderId Condition=" '$(ThunderId)' == '' ">$(PluginId)</ThunderId>
     <ThunderDependencies>@(ThunderDependency -> '"%(Filename)%(Extension)"')</ThunderDependencies>
     <ThunderWebsiteUrl Condition=" '$(ThunderWebsiteUrl)' == '' ">$(PackageProjectUrl)</ThunderWebsiteUrl>
