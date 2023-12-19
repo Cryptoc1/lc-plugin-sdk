@@ -22,7 +22,7 @@
 
     <ThunderId Condition=" '$(ThunderId)' == '' ">$(PackageId)</ThunderId>
     <ThunderId Condition=" '$(ThunderId)' == '' ">$(PluginId)</ThunderId>
-    <ThunderDependencies>@(ThunderDependency -> '"%(Filename)%(Extension)"')</ThunderDependencies>
+
     <ThunderWebsiteUrl Condition=" '$(ThunderWebsiteUrl)' == '' ">$(PackageProjectUrl)</ThunderWebsiteUrl>
   </PropertyGroup>
 
@@ -61,9 +61,10 @@ $(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
 
   <Target Name="_GeneratePluginManifest" BeforeTargets="CopyToOutputDirectory;Publish" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json">
     <PropertyGroup>
+      <_ThunderDependencies>@(ThunderDependency -> '"%(Filename)%(Extension)"')</_ThunderDependencies>
       <_GeneratedManifestText><![CDATA[{
     "name": "$(ThunderId)",
-    "dependencies": [$(ThunderDependencies.Replace('%3B', ','))],
+    "dependencies": [$(_ThunderDependencies.Replace('%3B', ','))],
     "description": "$(PluginDescription)",
     "version_number": "$(PluginVersion)",
     "website_url": "$(ThunderWebsiteUrl)"
