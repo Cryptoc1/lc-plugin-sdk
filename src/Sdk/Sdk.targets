@@ -90,7 +90,7 @@ $(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
     <Copy SourceFiles="$(_GeneratedManifestPath)" DestinationFiles="$(PublishDir)manifest.json" SkipUnchangedFiles="true" Condition=" Exists('$(_GeneratedManifestPath)') " />
   </Target>
 
-  <Target Name="PrepareForPluginPublish" BeforeTargets="PrepareForPublish">
+  <Target Name="PrepareForPluginPublish" BeforeTargets="PrepareForPublish;PublishPlugin">
     <PropertyGroup>
       <_PublishDir>$(PublishDir)</_PublishDir>
       <PublishDir>$(OutputPath)publish\</PublishDir>
@@ -123,7 +123,7 @@ $(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
 
     <ItemGroup>
       <_PluginFiles Include="$(PublishDir)\**\*.*" />
-      <_PluginStagingDirFiles Include="$(PluginStagingDir)\**.*" />
+      <_PluginStagingDirFiles Include="$(PluginStagingDir)\**\*.*" />
     </ItemGroup>
 
     <!-- stage -->
