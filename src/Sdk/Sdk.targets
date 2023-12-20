@@ -123,7 +123,7 @@ $(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
 
     <ItemGroup>
       <_PluginFiles Include="$(PublishDir)\**\*.*" />
-      <_PluginStagingDirFiles Include="$(PluginStagingDir)\**\*.*" />
+      <_PluginStagingDirFiles Include="$(PluginStagingDir)\**\*.*" Condition=" '$(StagePlugin)' == 'true' " />
     </ItemGroup>
 
     <!-- stage -->
