@@ -111,24 +111,26 @@ $(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
   <Target Name="PublishPlugin" AfterTargets="Publish">
     <Warning Code="LC001" Text="Plugin was not built in Release mode, users may experience an impact to performance!" Condition=" '$(Configuration)' != 'Release' AND '$(StagePlugin)' != 'true' " />
 
+    <Error Text="Failed to Stage Plugin, PluginStagingProfile directory '$(_PluginProfileDir)' does not exist." Condition=" '$(StagePlugin)' == 'true' AND !Exists('$(_PluginProfileDir)') " />
+    <MakeDir Directories="$(PluginStagingDir)" />
+
+    <!-- clean -->
     <ItemGroup>
       <_PublishFilesToDelete Include="$(PublishDir)\$(AssemblyName).deps.json" />
       <_PublishFilesToDelete Include="$(PublishDir)\*.pdb" Condition=" '$(Configuration)' == 'Release' " />
     </ItemGroup>
-    <Delete Files="@(_PluginFilesToDelete)" />
+    <Delete Files="@(_PublishFilesToDelete)" />
 
     <ItemGroup>
-      <_PluginFiles Include="$(PublishDir)\**\*.*" Exclude="$(PublishDir)\$(AssemblyName).deps.json" />
-      <_PluginFiles Remove="$(PublishDir)\*.pdb" Condition=" '$(Configuration)' == 'Release' " />
+      <_PluginFiles Include="$(PublishDir)\**\*.*" />
       <_PluginStagingDirFiles Include="$(PluginStagingDir)\**.*" />
     </ItemGroup>
 
-    <Error Text="Failed to Stage Plugin, PluginStagingProfile directory '$(_PluginProfileDir)' does not exist." Condition=" '$(StagePlugin)' == 'true' AND !Exists('$(_PluginProfileDir)') " />
-    <MakeDir Directories="$(PluginStagingDir)" />
-
+    <!-- stage -->
     <Delete Files="@(_PluginStagingDirFiles)" Condition=" '$(StagePlugin)' == 'true' " />
     <Copy SourceFiles="@(_PluginFiles)" DestinationFiles="@(_PluginFiles -> '$(PluginStagingDir)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" Condition=" '$(StagePlugin)' == 'true' " />
 
+    <!-- package -->
     <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(_PluginPackage)" Overwrite="true" Condition=" '$(StagePlugin)' != 'true' " />
   </Target>
 
