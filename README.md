@@ -90,7 +90,7 @@ The following `manifest.json` would be generated for the example metadata:
 
 To create a Thunderstore package, use `dotnet publish`:
 ```
-$ dotnet publish 
+$ dotnet publish -c Release
 MSBuild version 17.8.3+195e7f5a3 for .NET
   Determining projects to restore...
   All projects are up-to-date for restore.
