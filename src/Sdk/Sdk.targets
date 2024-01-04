@@ -53,6 +53,8 @@
     <PluginAssetsFile>$(BaseIntermediateOutputPath)plugin.assets.json</PluginAssetsFile>
     <PluginRestoreOutputs>$(PluginRestoreOutputs)$(PluginAssetsFile);</PluginRestoreOutputs>
     <PluginRestoreOutputs Condition=" '$(PluginLockFile)' != '' ">$(PluginRestoreOutputs)$(PluginLockFile);</PluginRestoreOutputs>
+
+    <ResolveAssemblyReferencesDependsOn>$(ResolveAssemblyReferencesDependsOn);ResolvePluginReferences</ResolveAssemblyReferencesDependsOn>
   </PropertyGroup>
 
   <!-- NOTE: enforce optimizations in release mode  -->
@@ -82,7 +84,7 @@
   <!-- 
     Executes the `RestorePluginDependencies` task to restore `ThunderDependency` items
    -->
-  <Target Name="RestorePlugins" BeforeTargets="Restore" Inputs="@(ThunderDependency)" Outputs="$(PluginRestoreOutputs)">
+  <Target Name="RestorePlugins" BeforeTargets="Restore" AfterTargets="_GetAllRestoreProjectPathItems" Inputs="$(MSBuildAllProjects)" Outputs="$(PluginRestoreOutputs)">
     <ItemGroup>
       <FileWrites Include="$(PluginLockFile)" Condition=" '$(PluginLockFile)' != '' " />
       <FileWrites Include="$(PluginAssetsFile)" />
@@ -97,7 +99,7 @@
   <!-- 
     Executes the `ResolvePluginAssemblies` task to resolve the reference assemblies of `ThunderDependency` items.
    -->
-  <Target Name="ResolvePluginReferences" AfterTargets="RestorePlugins;Restore" BeforeTargets="BeforeCompile;CoreCompile;ResolveReferences;ResolveAssemblyReferences">
+  <Target Name="ResolvePluginReferences" AfterTargets="RestorePlugins" DependsOnTargets="ResolveProjectReferences">
     <ResolvePluginAssemblies AssetsFile="$(PluginAssetsFile)">
       <Output ItemName="_PluginReference" TaskParameter="ResolvedAssemblies" />
     </ResolvePluginAssemblies>
@@ -110,7 +112,7 @@
   <!-- 
     Executes the `GeneratePluginInfoCode` task to generate a type containing plugin metadata defined via MSBuild properties.
    -->
-  <Target Name="_GeneratePluginInfo" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs">
+  <Target Name="_GeneratePluginInfo" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildProjectFullPath)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs">
     <ItemGroup>
       <Compile Include="$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs" />
       <FileWrites Include="$$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs" />
@@ -125,7 +127,7 @@
   <!-- 
     Executes the `GeneratePluginManifestJson` task to generate the json text of the `manifest.json` used when publishing a Thunderstore package.
    -->
-  <Target Name="_GeneratePluginManifest" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json">
+  <Target Name="_GeneratePluginManifest" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildProjectFullPath)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json">
     <ItemGroup>
       <Content Include="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json">
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
