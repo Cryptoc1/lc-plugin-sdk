@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ThunderDependency Include="Evaisa-LethalLib" Version="0.10.1" />
-    <ThunderDependency Include="no00ob-LCSoundTool-1.4.0" />
+    <!-- <ThunderDependency Include="no00ob-LCSoundTool-1.4.0" /> -->
   </ItemGroup>
 
   <PropertyGroup>
