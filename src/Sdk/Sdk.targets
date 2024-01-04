@@ -18,7 +18,7 @@
 
     <PluginCacheDir Condition=" '$(PluginCacheDir)' == '' AND '$(PLUGIN_SDK_CACHE)' != '' ">$([MSBuild]::EnsureTrailingSlash($(PLUGIN_SDK_CACHE)))</PluginCacheDir>
     <PluginCacheDir Condition=" '$(PluginCacheDir)' == '' ">$(PluginManagerDataDir)cache\</PluginCacheDir>
-    <PluginProfileDir Condition=" '$(PluginStagingProfile)' != '' AND '$(PluginProfileDir)' == '' AND '$(PluginManagerDataDir)' != '' ">$(PluginManagerDataDir)\profiles\$(PluginStagingProfile)\</PluginProfileDir>
+    <PluginProfileDir Condition=" '$(PluginStagingProfile)' != '' AND '$(PluginProfileDir)' == '' AND '$(PluginManagerDataDir)' != '' ">$(PluginManagerDataDir)profiles\$(PluginStagingProfile)\</PluginProfileDir>
 
     <PluginDescription Condition=" '$(PluginDescription)' == '' ">$(Description)</PluginDescription>
     <PluginId Condition=" '$(PluginId)' == '' ">$(AssemblyName)</PluginId>
@@ -50,11 +50,11 @@
     <PluginLockFile Condition=" '$(RestorePluginsWithLockFile)' == 'true' AND '$(PluginLockFile)' == '' ">$(MSBuildProjectDirectory)\plugins.lock.json</PluginLockFile>
     <PluginLockFile Condition=" '$(RestorePluginsWithLockFile)' != 'true' "></PluginLockFile>
 
-    <PluginAssetsFile>$(BaseIntermediateOutputPath)plugin.assets.json</PluginAssetsFile>
-    <PluginRestoreOutputs>$(PluginRestoreOutputs)$(PluginAssetsFile);</PluginRestoreOutputs>
+    <PluginAssetsFile>$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)plugin.assets.json</PluginAssetsFile>
+    <PluginRestoreOutputs>$(PluginRestoreOutputs);$(PluginAssetsFile);</PluginRestoreOutputs>
     <PluginRestoreOutputs Condition=" '$(PluginLockFile)' != '' ">$(PluginRestoreOutputs)$(PluginLockFile);</PluginRestoreOutputs>
 
-    <ResolveAssemblyReferencesDependsOn>$(ResolveAssemblyReferencesDependsOn);ResolvePluginReferences</ResolveAssemblyReferencesDependsOn>
+    <ResolveAssemblyReferencesDependsOn>$(ResolveAssemblyReferencesDependsOn)ResolvePluginReferences</ResolveAssemblyReferencesDependsOn>
   </PropertyGroup>
 
   <!-- NOTE: enforce optimizations in release mode  -->
@@ -148,19 +148,19 @@
    -->
   <Target Name="PrepareForPluginPublish" BeforeTargets="PrepareForPublish;PublishPlugin">
     <PropertyGroup>
-      <_PublishDir>$(PublishDir)</_PublishDir>
+      <_PublishDir>$([MSBuild]::EnsureTrailingSlash('$(PublishDir)'))</_PublishDir>
       <PublishDir>$(OutputPath)publish\</PublishDir>
 
-      <PluginStagingDir Condition=" '$(PluginStagingProfile)' != '' ">$(PluginProfileDir)\BepInEx\plugins\$(ThunderId)</PluginStagingDir>
+      <PluginStagingDir Condition=" '$(PluginStagingProfile)' != '' ">$(PluginProfileDir)BepInEx\plugins\$(ThunderId)\</PluginStagingDir>
       <StagePlugin Condition=" '$(StagePlugin)' != 'false' AND '$(PluginStagingProfile)' != '' ">true</StagePlugin>
 
-      <_PluginPackage>$(_PublishDir)\$(ThunderId)-$(PluginVersion).zip</_PluginPackage>
+      <_PluginPackage>$(_PublishDir)$(ThunderId)-$(PluginVersion).zip</_PluginPackage>
 
       <!-- NOTE: a custom output path was NOT specified, place the archive in 'bin\', rather than 'bin\publish\' (can't place archive in the folder being archived) -->
       <_PluginPackage Condition=" '$(PublishDir)' == '$(_PublishDir)' ">$(OutputPath)$(ThunderId)-$(PluginVersion).zip</_PluginPackage>
     </PropertyGroup>
 
-    <MakeDir Directories="$(_PublishDir)" />
+    <MakeDir Directories="$(_PublishDir)" Condition=" '$(StagePlugin)' != 'true' " />
   </Target>
 
   <!-- 
@@ -188,12 +188,14 @@
 
     <ItemGroup>
       <_PluginFiles Include="$(PublishDir)\**\*.*" />
-      <_PluginStagingDirFiles Include="$(PluginStagingDir)\**\*.*" Condition=" '$(StagePlugin)' == 'true' " />
+      <_PluginStagingDirFiles Include="$(PluginStagingDir)**\*.*" Condition=" '$(StagePlugin)' == 'true' " />
     </ItemGroup>
 
     <!-- stage -->
     <Delete Files="@(_PluginStagingDirFiles)" Condition=" '$(StagePlugin)' == 'true' " />
-    <Copy SourceFiles="@(_PluginFiles)" DestinationFiles="@(_PluginFiles -> '$(PluginStagingDir)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" Condition=" '$(StagePlugin)' == 'true' " />
+    <Copy SourceFiles="@(_PluginFiles)" DestinationFiles="@(_PluginFiles -> '$(PluginStagingDir)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" Condition=" '$(StagePlugin)' == 'true' " />
+
+    <Message Importance="High" Text="$(ThunderId) -> $(PluginStagingDir)" Condition=" '$(StagePlugin)' == 'true' " />
 
     <!-- package -->
     <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(_PluginPackage)" Overwrite="true" Condition=" '$(StagePlugin)' != 'true' " />
