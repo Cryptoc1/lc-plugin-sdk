@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "src", "src\LethalCompany.Plugin.Sdk.csproj", "{85FB813D-1364-46E0-BA26-CA2FC2C273D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LethalCompany.Plugin.Sdk", "src\LethalCompany.Plugin.Sdk.csproj", "{85FB813D-1364-46E0-BA26-CA2FC2C273D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\LethalCompany.SdkSample.csproj", "{3B3EAC57-F36B-47B2-9B90-CE0D6ED5B638}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LethalCompany.SdkSample", "test\LethalCompany.SdkSample.csproj", "{3B3EAC57-F36B-47B2-9B90-CE0D6ED5B638}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

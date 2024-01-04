@@ -1,11 +1,31 @@
-﻿<Project Sdk="Microsoft.Build.NoTargets/3.7.56">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <DevelopmentDependency>true</DevelopmentDependency>
+    <Description>A MSBuild Sdk for creating Lethal Company mods.</Description>
+    <Deterministic>true</Deterministic>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <Features>strict</Features>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <ImplicitUsings>true</ImplicitUsings>
+    <IncludeSymbols>true</IncludeSymbols>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <LangVersion>latest</LangVersion>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
     <NoWarn>$(NoWarn);NU5128;</NoWarn>
+    <Nullable>enable</Nullable>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <TargetFrameworks>net48;net8.0</TargetFrameworks>
+
+    <!-- analyzers -->
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <RunAnalyzers>true</RunAnalyzers>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -27,13 +47,32 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\README.md" Pack="true" PackagePath="\" />
-    <Content Include="Sdk\*" Pack="true" PackagePath="Sdk\" />
+    <Content Include="..\README.md" PackagePath="\" />
+    <Content Include="Sdk\*" PackagePath="Sdk\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.8.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
     <PackageReference Include="MinVer" Version="4.3.0" PrivateAssets="all" />
+    <PackageReference Include="NuGet.Versioning" Version="6.8.0" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
+    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- <PackageReference Update="@(PackageReference)" PrivateAssets="all" /> -->
+
+    <Using Include="System.Net.Http" />
+    <Using Include="NuGet.Versioning" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' ">

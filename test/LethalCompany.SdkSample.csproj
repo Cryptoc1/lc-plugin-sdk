@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <Import Project="..\src\Sdk\Sdk.props" />
 
   <PropertyGroup>
@@ -7,9 +7,18 @@
     <PackageId>LC_SDK_SAMPLE</PackageId>
     <PluginId>cryptoc1.lethalcompany.sdksample</PluginId>
     <Version>1.0.0</Version>
-
     <NoWarn>$(NoWarn);CA1822;</NoWarn>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ThunderDependency Include="Evaisa-LethalLib" Version="0.10.1" />
+    <ThunderDependency Include="no00ob-LCSoundTool-1.4.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PluginSdkAssemblyDir>$(MSBuildThisFileDirectory)..\src\bin\Debug\</PluginSdkAssemblyDir>
   </PropertyGroup>
 
   <Import Project="..\src\Sdk\Sdk.targets" />

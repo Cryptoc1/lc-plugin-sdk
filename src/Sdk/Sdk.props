@@ -1,11 +1,21 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition=" '$(MicrosoftCommonPropsHasBeenImported)' != 'true' "/>
 
+  <ItemDefinitionGroup>
+    <ThunderDependency>
+      <ExcludeAssets></ExcludeAssets>
+      <IncludeAssets>*.dll; plugins\**\*.dll; BepInEx\core\**\*.dll; BepInEx\plugins\**\*.dll;</IncludeAssets>
+      <Version></Version>
+      <Visible>false</Visible>
+    </ThunderDependency>
+  </ItemDefinitionGroup>
+
   <!-- defaults -->
   <PropertyGroup>
     <Deterministic>true</Deterministic>
     <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
     <Features>strict</Features>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
     <ImplicitUsings>true</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
     <LangVersion>latest</LangVersion>
@@ -38,17 +48,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ThunderDependency Include="BepInEx-BepInExPack-5.4.2100" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="System.Collections" />
-    <Using Include="BepInEx" />
-    <Using Include="HarmonyLib" />
+    <ThunderDependency Include="BepInEx-BepInExPack" Version="5.4.2100" ExcludeAssets="*" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' ">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
-
 </Project>

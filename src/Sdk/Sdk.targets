@@ -1,31 +1,62 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
+  <PropertyGroup Condition=" '$(PluginSdkAssembly)' == '' ">
+    <PluginSdkAssemblyDir Condition=" '$(PluginSdkAssemblyDir)' == '' ">$(MSBuildThisFileDirectory)..\tasks\</PluginSdkAssemblyDir>
+
+    <PluginSdkAssembly Condition=" '$(MSBuildRuntimeType)' == 'Core' ">$(PluginSdkAssemblyDir)net8.0\LethalCompany.Plugin.Sdk.dll</PluginSdkAssembly>
+    <PluginSdkAssembly Condition=" '$(MSBuildRuntimeType)' != 'Core' ">$(PluginSdkAssemblyDir)net48\LethalCompany.Plugin.Sdk.dll</PluginSdkAssembly>
+  </PropertyGroup>
+
+  <UsingTask TaskName="GeneratePluginInfoCode" AssemblyFile="$(PluginSdkAssembly)" />
+  <UsingTask TaskName="GeneratePluginManifestJson" AssemblyFile="$(PluginSdkAssembly)" />
+  <UsingTask TaskName="ResolvePluginAssemblies" AssemblyFile="$(PluginSdkAssembly)" />
+  <UsingTask TaskName="RestorePluginDependencies" AssemblyFile="$(PluginSdkAssembly)" />
+
   <PropertyGroup>
+    <PluginManagerDataDir Condition=" '$(PluginManagerDataDir)' == '' AND '$(PluginManager)' == 'r2modman' ">$(AppData)\r2modmanPlus-local\LethalCompany\</PluginManagerDataDir>
+    <PluginManagerDataDir Condition=" '$(PluginManagerDataDir)' == '' ">$(AppData)\Thunderstore Mod Manager\DataFolder\LethalCompany\</PluginManagerDataDir>
+
+    <PluginCacheDir Condition=" '$(PluginCacheDir)' == '' ">$(PluginManagerDataDir)cache\</PluginCacheDir>
+    <PluginProfileDir Condition=" '$(PluginStagingProfile)' != '' AND '$(PluginProfileDir)' == '' AND '$(PluginManagerDataDir)' != '' ">$(PluginManagerDataDir)\profiles\$(PluginStagingProfile)\</PluginProfileDir>
+
     <PluginDescription Condition=" '$(PluginDescription)' == '' ">$(Description)</PluginDescription>
     <PluginId Condition=" '$(PluginId)' == '' ">$(AssemblyName)</PluginId>
 
-    <PluginInfoTypeAccessModifier Condition=" '$(PluginInfoTypeAccessModifier)' == '' ">internal static</PluginInfoTypeAccessModifier>
+    <!-- NOTE: backwards compatibility with renaming PluginInfoTypeAccessModifier -> PluginInfoModifiers -->
+    <PluginInfoTypeModifiers Condition=" '$(PluginInfoTypeModifiers)' == '' ">$(PluginInfoTypeAccessModifier)</PluginInfoTypeModifiers>
+    <PluginInfoTypeModifiers Condition=" '$(PluginInfoTypeModifiers)' == '' ">internal static</PluginInfoTypeModifiers>
     <PluginInfoTypeName Condition=" '$(PluginInfoTypeName)' == '' ">GeneratedPluginInfo</PluginInfoTypeName>
 
     <PluginName Condition=" '$(PluginName)' == '' ">$(Title)</PluginName>
     <PluginName Condition=" '$(PluginName)' == '' ">$(Product)</PluginName>
     <PluginName Condition=" '$(PluginName)' == '' ">$(AssemblyName)</PluginName>
 
-    <PluginChangelogFile Condition=" '$(PluginChangelogFile)' == '' ">CHANGELOG.md</PluginChangelogFile>
+    <PluginChangeLogFile Condition=" '$(PluginChangeLogFile)' == '' ">CHANGELOG.md</PluginChangeLogFile>
     <PluginReadMeFile Condition=" '$(PluginReadMeFile)' == '' ">$(PackageReadMeFile)</PluginReadMeFile>
     <PluginReadMeFile Condition=" '$(PluginReadMeFile)' == '' ">README.md</PluginReadMeFile>
-
     <PluginVersion Condition=" '$(PluginVersion)' == '' ">$(Version)</PluginVersion>
 
+    <!-- Thunderstore metadata -->
+    <ThunderDescription Condition=" '$(ThunderDescription)' == '' ">$(PluginDescription)</ThunderDescription>
     <ThunderId Condition=" '$(ThunderId)' == '' ">$(PackageId)</ThunderId>
     <ThunderId Condition=" '$(ThunderId)' == '' ">$(PluginId)</ThunderId>
-
+    <ThunderVersion Condition=" '$(ThunderVersion)' == '' ">$(PluginVersion)</ThunderVersion>
     <ThunderWebsiteUrl Condition=" '$(ThunderWebsiteUrl)' == '' ">$(PackageProjectUrl)</ThunderWebsiteUrl>
+
+    <!-- Plugin Restore -->
+    <RestorePluginsWithLockFile Condition=" '$(RestorePluginsWithLockFile)' == '' AND '$(RestorePackagesWithLockFile)' == 'true' ">true</RestorePluginsWithLockFile>
+
+    <PluginLockFile Condition=" '$(RestorePluginsWithLockFile)' == 'true' AND '$(PluginLockFile)' == '' ">$(MSBuildProjectDirectory)\plugins.lock.json</PluginLockFile>
+    <PluginLockFile Condition=" '$(RestorePluginsWithLockFile)' != 'true' "></PluginLockFile>
+
+    <PluginAssetsFile>$(BaseIntermediateOutputPath)plugin.assets.json</PluginAssetsFile>
+    <PluginRestoreOutputs>$(PluginRestoreOutputs)$(PluginAssetsFile);</PluginRestoreOutputs>
+    <PluginRestoreOutputs Condition=" '$(PluginLockFile)' != '' ">$(PluginRestoreOutputs)$(PluginLockFile);</PluginRestoreOutputs>
   </PropertyGroup>
 
   <!-- NOTE: enforce optimizations in release mode  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' AND '$(DisableReleaseOptimizations)' != 'true' ">
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <IncludeSymbols>false</IncludeSymbols>
@@ -33,7 +64,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="$(PluginChangelogFile)" Condition=" '$(PluginChangelogFile)' != '' AND Exists('$(MSBuildProjectDirectory)\$(PluginChangelogFile)') ">
+    <Content Include="$(PluginChangeLogFile)" Condition=" '$(PluginChangeLogFile)' != '' AND Exists('$(MSBuildProjectDirectory)\$(PluginChangeLogFile)') ">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
 
@@ -42,61 +73,83 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(ImplicitUsings)' == 'true' OR '$(ImplicitUsings)' == 'enable' ">
+    <Using Include="System.Collections" />
+    <Using Include="BepInEx" />
+    <Using Include="HarmonyLib" />
+  </ItemGroup>
+
+  <!-- 
+    Executes the `RestorePluginDependencies` task to restore `ThunderDependency` items
+   -->
+  <Target Name="RestorePlugins" BeforeTargets="Restore" Inputs="@(ThunderDependency)" Outputs="$(PluginRestoreOutputs)">
+    <ItemGroup>
+      <FileWrites Include="$(PluginLockFile)" Condition=" '$(PluginLockFile)' != '' " />
+      <FileWrites Include="$(PluginAssetsFile)" />
+    </ItemGroup>
+
+    <RestorePluginDependencies CacheDirectory="$(PluginCacheDir)" Dependencies="@(ThunderDependency)" LockedMode="$(RestoreLockedMode)" PluginLockFile="$(PluginLockFile)" WithLockFile="$(RestorePluginsWithLockFile)">
+      <Output PropertyName="_GeneratedAssetsJson" TaskParameter="GeneratedAssetsJson" />
+    </RestorePluginDependencies>
+    <WriteLinesToFile File="$(PluginAssetsFile)" Lines="$(_GeneratedAssetsJson)" Overwrite="true" WriteOnlyWhenDifferent="true" Condition=" '$(_GeneratedAssetsJson)' != '' " />
+  </Target>
+
+  <!-- 
+    Executes the `ResolvePluginAssemblies` task to resolve the reference assemblies of `ThunderDependency` items.
+   -->
+  <Target Name="ResolvePluginReferences" AfterTargets="RestorePlugins;Restore" BeforeTargets="BeforeCompile;CoreCompile;ResolveReferences;ResolveAssemblyReferences">
+    <ResolvePluginAssemblies AssetsFile="$(PluginAssetsFile)">
+      <Output ItemName="_PluginReference" TaskParameter="ResolvedAssemblies" />
+    </ResolvePluginAssemblies>
+
+    <ItemGroup>
+      <Reference Include="@(_PluginReference)" Private="false" />
+    </ItemGroup>
+  </Target>
+
+  <!-- 
+    Executes the `GeneratePluginInfoCode` task to generate a type containing plugin metadata defined via MSBuild properties.
+   -->
   <Target Name="_GeneratePluginInfo" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs">
-    <PropertyGroup>
-      <_GeneratedPluginInfoText><![CDATA[// <auto-generated />
-namespace $(RootNamespace)%3B
-
-$(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
-{
-    public const string Identifier = "$(PluginId)"%3B
-    public const string Name = "$(PluginName)"%3B
-    public const string Version = "$(PluginVersion)"%3B
-}]]></_GeneratedPluginInfoText>
-
-      <_GeneratedPluginInfoPath>$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs</_GeneratedPluginInfoPath>
-    </PropertyGroup>
-
     <ItemGroup>
-      <Compile Include="$(_GeneratedPluginInfoPath)" />
-      <FileWrites Include="$(_GeneratedPluginInfoPath)" />
+      <Compile Include="$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs" />
+      <FileWrites Include="$$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs" />
     </ItemGroup>
 
-    <WriteLinesToFile Lines="$(_GeneratedPluginInfoText)" File="$(_GeneratedPluginInfoPath)" WriteOnlyWhenDifferent="true" Overwrite="true" />
+    <GeneratePluginInfoCode Identifier="$(PluginId)" Name="$(PluginName)" Namespace="$(RootNamespace)" Version="$(PluginVersion)" TypeModifiers="$(PluginInfoTypeModifiers)" TypeName="$(PluginInfoTypeName)">
+      <Output PropertyName="_GeneratedPluginInfoCode" TaskParameter="GeneratedText" />
+    </GeneratePluginInfoCode>
+    <WriteLinesToFile File="$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs" Lines="$(_GeneratedPluginInfoCode)" Overwrite="true" WriteOnlyWhenDifferent="true" Condition=" '$(_GeneratedPluginInfoCode)' != '' " />
   </Target>
 
-  <Target Name="_GeneratePluginManifest" BeforeTargets="CopyToOutputDirectory;Publish" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json">
-    <PropertyGroup>
-      <_ThunderDependencies>@(ThunderDependency -> '"%(Filename)%(Extension)"')</_ThunderDependencies>
-      <_GeneratedManifestText><![CDATA[{
-    "name": "$(ThunderId)",
-    "dependencies": [$(_ThunderDependencies.Replace('%3B', ','))],
-    "description": "$(PluginDescription)",
-    "version_number": "$(PluginVersion)",
-    "website_url": "$(ThunderWebsiteUrl)"
-}]]></_GeneratedManifestText>
-
-      <_GeneratedManifestPath>$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json</_GeneratedManifestPath>
-    </PropertyGroup>
-
+  <!-- 
+    Executes the `GeneratePluginManifestJson` task to generate the json text of the `manifest.json` used when publishing a Thunderstore package.
+   -->
+  <Target Name="_GeneratePluginManifest" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json">
     <ItemGroup>
-      <FileWrites Include="$(_GeneratedManifestPath)" />
+      <Content Include="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json">
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <Link>manifest.json</Link>
+        <Visible>false</Visible>
+      </Content>
+      <FileWrites Include="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json" />
     </ItemGroup>
 
-    <WriteLinesToFile Lines="$(_GeneratedManifestText)" File="$(_GeneratedManifestPath)" WriteOnlyWhenDifferent="true" Overwrite="true" />
+    <GeneratePluginManifestJson Dependencies="@(ThunderDependency)" Description="$(ThunderDescription)" Name="$(ThunderId)" Version="$(ThunderVersion)" WebsiteUrl="$(ThunderWebsiteUrl)">
+      <Output PropertyName="_GeneratedManifestJson" TaskParameter="GeneratedText" />
+    </GeneratePluginManifestJson>
+    <WriteLinesToFile File="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json" Lines="$(_GeneratedManifestJson)" Overwrite="true" WriteOnlyWhenDifferent="true" Condition=" '$(_GeneratedManifestJson)' != '' " />
   </Target>
 
-  <Target Name="_CopyToPublishDir" AfterTargets="Publish" BeforeTargets="PublishPlugin">
-    <Copy SourceFiles="$(_GeneratedManifestPath)" DestinationFiles="$(PublishDir)manifest.json" SkipUnchangedFiles="true" Condition=" Exists('$(_GeneratedManifestPath)') " />
-  </Target>
-
+  <!-- 
+    Configures properties+directories required for publishing a Thunderstore package.
+   -->
   <Target Name="PrepareForPluginPublish" BeforeTargets="PrepareForPublish;PublishPlugin">
     <PropertyGroup>
       <_PublishDir>$(PublishDir)</_PublishDir>
       <PublishDir>$(OutputPath)publish\</PublishDir>
 
-      <_PluginProfileDir Condition=" '$(PluginStagingProfile)' != '' ">$(AppData)\Thunderstore Mod Manager\DataFolder\LethalCompany\profiles\$(PluginStagingProfile)</_PluginProfileDir>
-      <PluginStagingDir Condition=" '$(PluginStagingProfile)' != '' ">$(_PluginProfileDir)\BepInEx\plugins\$(ThunderId)</PluginStagingDir>
+      <PluginStagingDir Condition=" '$(PluginStagingProfile)' != '' ">$(PluginProfileDir)\BepInEx\plugins\$(ThunderId)</PluginStagingDir>
       <StagePlugin Condition=" '$(StagePlugin)' != 'false' AND '$(PluginStagingProfile)' != '' ">true</StagePlugin>
 
       <_PluginPackage>$(_PublishDir)\$(ThunderId)-$(PluginVersion).zip</_PluginPackage>
@@ -108,10 +161,20 @@ $(PluginInfoTypeAccessModifier) class $(PluginInfoTypeName)
     <MakeDir Directories="$(_PublishDir)" />
   </Target>
 
-  <Target Name="PublishPlugin" AfterTargets="Publish">
-    <Warning Code="LC001" Text="Plugin was not built in Release mode, users may experience an impact to performance!" Condition=" '$(Configuration)' != 'Release' AND '$(StagePlugin)' != 'true' " />
+  <!-- 
+    Copies custom build assets to the publish directory, prior to the default publishing process.
+   -->
+  <Target Name="_CopyToPublishDir" AfterTargets="Publish" BeforeTargets="PublishPlugin">
+    <Copy SourceFiles="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json" DestinationFiles="$(PublishDir)manifest.json" SkipUnchangedFiles="true" Condition=" Exists('$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json') " />
+  </Target>
 
-    <Error Text="Failed to Stage Plugin, PluginStagingProfile directory '$(_PluginProfileDir)' does not exist." Condition=" '$(StagePlugin)' == 'true' AND !Exists('$(_PluginProfileDir)') " />
+  <!-- 
+    Creates a Thunderstore package from the content of the default publish directory.
+   -->
+  <Target Name="PublishPlugin" AfterTargets="Publish">
+    <Warning Code="LC001" Text="Plugin was not built in Release mode, users may experience an impact to performance!" Condition=" '$(Configuration)' != 'Release' AND '$(StagePlugin)' != 'true' AND '$(DisableReleaseOptimizations)' != 'true' " />
+
+    <Error Text="Failed to Stage Plugin, PluginStagingProfile directory '$(PluginProfileDir)' does not exist." Condition=" '$(StagePlugin)' == 'true' AND !Exists('$(PluginProfileDir)') " />
     <MakeDir Directories="$(PluginStagingDir)" />
 
     <!-- clean -->

@@ -1,4 +1,4 @@
-namespace LethalCompany.SdkSample;
+﻿namespace LethalCompany.SdkSample;
 
 [BepInPlugin(GeneratedPluginInfo.Identifier, GeneratedPluginInfo.Name, GeneratedPluginInfo.Version)]
 public sealed class SamplePlugin : BaseUnityPlugin

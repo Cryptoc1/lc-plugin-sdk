@@ -1,0 +1,31 @@
+﻿{
+  "version": 1,
+  "dependencies": {
+    "BepInEx-BepInExPack": {
+      "type": "Direct",
+      "requested": "5.4.2100",
+      "resolved": "5.4.2100"
+    },
+    "Evaisa-LethalLib": {
+      "type": "Direct",
+      "requested": "0.10.1",
+      "resolved": "0.10.1",
+      "dependencies": {
+        "BepInEx-BepInExPack": "5.4.2100",
+        "Evaisa-HookGenPatcher": "0.0.5"
+      }
+    },
+    "no00ob-LCSoundTool": {
+      "type": "Direct",
+      "requested": "1.4.0",
+      "resolved": "1.4.0",
+      "dependencies": {
+        "BepInEx-BepInExPack": "5.4.2100"
+      }
+    },
+    "Evaisa-HookGenPatcher": {
+      "type": "Transitive",
+      "resolved": "0.0.5"
+    }
+  }
+}

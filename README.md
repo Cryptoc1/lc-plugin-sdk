@@ -17,14 +17,19 @@ An [MSBuild Sdk](https://learn.microsoft.com/en-us/visualstudio/msbuild/how-to-u
 
 ## Usage
 
+### Requirements
+- .NET 8.0
+- VSCode/VS2022
+- Thunderstore
+
 To start using the Sdk, create a new Class Library:
 ```bash
 $ dotnet new classlib -n {NAME}
 ```
 
-In the new `.csproj`, update the `Sdk="Microsoft.NET.Sdk"` attribute at the top of the file to `Sdk="LethalCompany.Plugin.Sdk/{VERSION}"`, and replace any existing content with metadata about the plugin:
+In the new `.csproj`, update the `Sdk="Microsoft.NET.Sdk"` attribute at the top of the file to `Sdk="LethalCompany.Plugin.Sdk/{LATEST-VERSION}"`, and replace any existing content with metadata about the plugin:
 ```xml
-<Project Sdk="LethalCompany.Plugin.Sdk/1.0.0">
+<Project Sdk="LethalCompany.Plugin.Sdk/1.1.0">
   
   <PropertyGroup>
     <Title>Plugin Example</Title>
@@ -48,14 +53,14 @@ public sealed class SamplePlugin : BaseUnityPlugin
 > 
 > _The name of the generated class can be changed using the `<PluginInfoTypeName />` MSBuild property._
 >
-> _By default, the generated class is `internal static`, this can be changed using the `<PluginInfoTypeAccessModifier />` MSBuild property._
+> _By default, the generated class is `internal static`, this can be changed using the `<PluginInfoTypeModifiers />` MSBuild property._
 
 
 ### Publish to Thunderstore
 
 > _In order to create a Thunderstore Package, the Sdk requires that `icon.png` and `README.md` files exist at the project root._
 
-> _The location of the `CHANGELOG.md` and `README.md` files can be customized using the `<PluginChangelogFile />` and `<PluginReadMeFile />` MSBuild properties._
+> _The location of the `CHANGELOG.md` and `README.md` files can be customized using the `<PluginChangeLogFile />` and `<PluginReadMeFile />` MSBuild properties._
 
 In the `.csproj` of the plugin, provide the metadata used to generate a `manifest.json` for publishing:
 ```xml
@@ -71,7 +76,7 @@ In the `.csproj` of the plugin, provide the metadata used to generate a `manifes
   </PropertyGroup>
 
   <ItemGroup>
-    <ThunderDependency Include="ExampleTeam-OtherPlugin-1.0.0" />
+    <ThunderDependency Include="ExampleTeam-OtherPlugin" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
@@ -111,11 +116,28 @@ dotnet publish -p:PluginStagingProfile="..."
 
 #### Specify Thunderstore Dependencies
 
-To specify Thunderstore dependencies in the generated `manifest.json`, use the `ThunderDependency` item:
+To specify a dependency on another Thunderstore plugin, use the `ThunderDependency` item:
 ```xml
 <ItemGroup>
-  <ThunderDependency Include="ExampleTeam-ExamplePlugin-1.0.0" />
+  <ThunderDependency Include="ExampleTeam-ExamplePlugin" Version="1.0.0" />
+</ItemGroup>
+```
+
+##### Configure Referenced Assemblies
+
+When a `ThunderDependency` is specified, the Sdk will restore & resolve assemblies for the dependency. 
+
+Assembly resolution can be configured by specifying glob patterns for the `ExcludeAssets`/`IncludeAssets` metadata:
+
+```xml
+<ItemGroup>
+  <ThunderDependency Include="ExampleTeam-ExamplePlugin" Version="1.0.0">
+    <ExludeAssets>path-to-ignore\*.dll</ExcludeAssets>
+  </ThunderDependency>
 </ItemGroup>
 ```
 
 > _The Sdk specifies a default `ThunderDependency` on `BepInExPack`, specifying one yourself is unnecessary._
+
+> _When publishing a plugin, the Sdk will use the specified `ThunderDependency` items to produce a value for the `dependencies` key of the generated `manifest.json`._
+
