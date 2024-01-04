@@ -371,9 +371,6 @@
           "Microsoft.NETCore.Targets": "1.1.0",
           "System.Runtime": "4.3.0"
         }
-      },
-      "lethalcompany.plugin.sdk": {
-        "type": "Project"
       }
     }
   }
