@@ -1,4 +1,5 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition=" '$(MicrosoftCommonPropsHasBeenImported)' != 'true' "/>
 
   <ItemDefinitionGroup>
@@ -38,7 +39,6 @@
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0" PrivateAssets="all" />
     <PackageReference Include="LethalAPI.GameLibs" Version="45.1.0" PrivateAssets="all" ExcludeAssets="all" GeneratePathProperty="true" NoWarn="NU1701" />
     <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
@@ -48,7 +48,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ThunderDependency Include="BepInEx-BepInExPack" Version="5.4.2100" ExcludeAssets="*" />
+    <ThunderDependency Include="BepInEx-BepInExPack" Version="5.4.2100">
+      <ExcludeAssets>**\BepInEx\core\0Harmony20.dll</ExcludeAssets>
+      <IncludeAssets>**\BepInEx\core\*.dll</IncludeAssets>
+    </ThunderDependency>
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' ">

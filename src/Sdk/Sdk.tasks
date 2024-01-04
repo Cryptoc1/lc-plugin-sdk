@@ -1,0 +1,18 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <PluginSdkAssemblyHasBeenImported>true</PluginSdkAssemblyHasBeenImported>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(PluginSdkAssembly)' == '' ">
+        <PluginSdkAssemblyDir Condition=" '$(PluginSdkAssemblyDir)' == '' ">..\build\</PluginSdkAssemblyDir>
+        <PluginSdkAssembly Condition=" '$(MSBuildRuntimeType)' == 'Core' ">$(PluginSdkAssemblyDir)net8.0\LethalCompany.Plugin.Sdk.dll</PluginSdkAssembly>
+        <PluginSdkAssembly Condition=" '$(MSBuildRuntimeType)' != 'Core' ">$(PluginSdkAssemblyDir)net472\LethalCompany.Plugin.Sdk.dll</PluginSdkAssembly>
+    </PropertyGroup>
+
+    <UsingTask TaskName="LethalCompany.Plugin.Sdk.GeneratePluginInfoCode" AssemblyFile="$(PluginSdkAssembly)" />
+    <UsingTask TaskName="LethalCompany.Plugin.Sdk.GeneratePluginManifestJson" AssemblyFile="$(PluginSdkAssembly)" />
+    <UsingTask TaskName="LethalCompany.Plugin.Sdk.ResolvePluginAssemblies" AssemblyFile="$(PluginSdkAssembly)" />
+    <UsingTask TaskName="LethalCompany.Plugin.Sdk.RestorePluginDependencies" AssemblyFile="$(PluginSdkAssembly)" />
+
+</Project>

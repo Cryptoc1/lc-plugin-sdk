@@ -30,7 +30,7 @@ $ dotnet new classlib -n {NAME}
 
 In the new `.csproj`, update the `Sdk="Microsoft.NET.Sdk"` attribute at the top of the file to `Sdk="LethalCompany.Plugin.Sdk/{LATEST-VERSION}"`, and replace any existing content with metadata about the plugin:
 ```xml
-<Project Sdk="LethalCompany.Plugin.Sdk/1.1.0">
+<Project Sdk="LethalCompany.Plugin.Sdk/...">
   
   <PropertyGroup>
     <Title>Plugin Example</Title>

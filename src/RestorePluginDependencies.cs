@@ -166,9 +166,12 @@ public sealed class RestorePluginDependencies : Microsoft.Build.Utilities.Task
 
         foreach (var restoration in restorations)
         {
-            if (restoration is PluginRestoration.Skipped)
+            if (restoration is PluginRestoration.Success success)
             {
-                Log.LogMessage($"Skipped restoring '{restoration.Moniker}', it already exists in the cache.");
+                Log.LogMessage(success is PluginRestoration.Skipped
+                    ? $"Skipped restoring '{restoration.Moniker}', it already exists in the cache."
+                    : $"Restored '{success.Moniker}' to '{success.Path}'.");
+
                 continue;
             }
 
@@ -182,11 +185,6 @@ public sealed class RestorePluginDependencies : Microsoft.Build.Utilities.Task
 
                 restored = false;
                 continue;
-            }
-
-            if (restoration is PluginRestoration.Success success)
-            {
-                Log.LogMessage($"Restored '{success.Moniker}' to '{success.Path}'.");
             }
         }
 

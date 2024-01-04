@@ -1,16 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
-
-  <PropertyGroup Condition=" '$(PluginSdkAssembly)' == '' ">
-    <PluginSdkAssemblyDir Condition=" '$(PluginSdkAssemblyDir)' == '' ">..\build\</PluginSdkAssemblyDir>
-    <PluginSdkAssembly Condition=" '$(MSBuildRuntimeType)' == 'Core' ">$(PluginSdkAssemblyDir)net8.0\LethalCompany.Plugin.Sdk.dll</PluginSdkAssembly>
-    <PluginSdkAssembly Condition=" '$(MSBuildRuntimeType)' != 'Core' ">$(PluginSdkAssemblyDir)net472\LethalCompany.Plugin.Sdk.dll</PluginSdkAssembly>
-  </PropertyGroup>
-
-  <UsingTask TaskName="GeneratePluginInfoCode" AssemblyFile="$(PluginSdkAssembly)" />
-  <UsingTask TaskName="GeneratePluginManifestJson" AssemblyFile="$(PluginSdkAssembly)" />
-  <UsingTask TaskName="ResolvePluginAssemblies" AssemblyFile="$(PluginSdkAssembly)" />
-  <UsingTask TaskName="RestorePluginDependencies" AssemblyFile="$(PluginSdkAssembly)" />
+  <Import Project="Sdk.tasks" Condition=" '$(PluginSdkAssemblyHasBeenImported)' != 'true' " />
 
   <PropertyGroup>
     <PluginManagerDataDir Condition=" '$(PluginManagerDataDir)' == '' AND '$(PluginManager)' == 'r2modman' ">$(AppData)\r2modmanPlus-local\LethalCompany\</PluginManagerDataDir>

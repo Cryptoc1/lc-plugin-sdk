@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PluginSdkAssemblyDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\src\bin\Debug\'))</PluginSdkAssemblyDir>
+    <PluginSdkAssemblyDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\src\bin\$(Configuration)\'))</PluginSdkAssemblyDir>
   </PropertyGroup>
 
   <Import Project="..\src\Sdk\Sdk.targets" />
