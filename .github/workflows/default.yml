@@ -14,6 +14,7 @@ on:
 env:
   DOTNET_NOLOGO: true
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  PLUGIN_SDK_CACHE: ${{ github.workspace }}/.plugins/cache
 
 jobs:
   build:
@@ -28,6 +29,14 @@ jobs:
           cache: true
           cache-dependency-path: ./**/packages.lock.json
           global-json-file: global.json
+
+      - name: cache plugins
+        uses: actions/cache@v3
+        with:
+          key: plugin-cache-${{ runner.os }}-${{ hashFiles('**/plugins.lock.json') }}
+          path: ${{ env.PLUGIN_SDK_CACHE }}
+          restore-keys: |
+            plugin-cache-${{ runner.os }}-
 
       - name: restore
         run: dotnet restore --locked-mode
@@ -53,7 +62,7 @@ jobs:
           global-json-file: global.json
 
       - name: restore
-        run: dotnet restore --locked-mode
+        run: dotnet restore src/LethalCompany.Plugin.Sdk.csproj --locked-mode
 
       - name: pack
         run: dotnet pack src/LethalCompany.Plugin.Sdk.csproj -c Release -o .sdk --no-restore

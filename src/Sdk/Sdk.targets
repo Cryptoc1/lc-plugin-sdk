@@ -17,6 +17,7 @@
     <PluginManagerDataDir Condition=" '$(PluginManagerDataDir)' == '' AND '$(PluginManager)' == 'r2modman' ">$(AppData)\r2modmanPlus-local\LethalCompany\</PluginManagerDataDir>
     <PluginManagerDataDir Condition=" '$(PluginManagerDataDir)' == '' ">$(AppData)\Thunderstore Mod Manager\DataFolder\LethalCompany\</PluginManagerDataDir>
 
+    <PluginCacheDir Condition=" '$(PluginCacheDir)' == '' AND '$(PLUGIN_SDK_CACHE)' != '' ">$([MSBuild]::EnsureTrailingSlash($(PLUGIN_SDK_CACHE)))</PluginCacheDir>
     <PluginCacheDir Condition=" '$(PluginCacheDir)' == '' ">$(PluginManagerDataDir)cache\</PluginCacheDir>
     <PluginProfileDir Condition=" '$(PluginStagingProfile)' != '' AND '$(PluginProfileDir)' == '' AND '$(PluginManagerDataDir)' != '' ">$(PluginManagerDataDir)\profiles\$(PluginStagingProfile)\</PluginProfileDir>
 
