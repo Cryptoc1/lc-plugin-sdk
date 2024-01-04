@@ -41,8 +41,11 @@ jobs:
       - name: restore
         run: dotnet restore --locked-mode
 
-      - name: build
-        run: dotnet build --no-restore
+      - name: build sdk
+        run: dotnet build src/LethalCompany.Plugin.Sdk.csproj --no-restore
+
+      - name: build sample
+        run: dotnet build test/LethalCompany.SdkSample.csproj --no-restore
 
   pack:
     needs: [build]
