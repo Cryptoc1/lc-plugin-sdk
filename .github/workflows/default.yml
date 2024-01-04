@@ -51,7 +51,8 @@ jobs:
         run: dotnet build test/LethalCompany.SdkSample.csproj --no-restore
 
   pack:
-    needs: [build]
+    if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/develop')
+
     runs-on: windows-latest
     steps:
       - name: checkout
@@ -80,7 +81,6 @@ jobs:
           path: .sdk
 
   publish:
-    if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/develop')
     needs: [pack]
 
     runs-on: windows-latest

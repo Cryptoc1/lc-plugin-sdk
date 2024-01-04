@@ -99,7 +99,7 @@
   <!-- 
     Executes the `ResolvePluginAssemblies` task to resolve the reference assemblies of `ThunderDependency` items.
    -->
-  <Target Name="ResolvePluginReferences" AfterTargets="RestorePlugins" DependsOnTargets="ResolveProjectReferences">
+  <Target Name="ResolvePluginReferences" BeforeTargets="CoreCompile" AfterTargets="RestorePlugins;Restore" DependsOnTargets="ResolveProjectReferences">
     <ResolvePluginAssemblies AssetsFile="$(PluginAssetsFile)">
       <Output ItemName="_PluginReference" TaskParameter="ResolvedAssemblies" />
     </ResolvePluginAssemblies>
