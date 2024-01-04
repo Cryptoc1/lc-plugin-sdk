@@ -2,10 +2,9 @@
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup Condition=" '$(PluginSdkAssembly)' == '' ">
-    <PluginSdkAssemblyDir Condition=" '$(PluginSdkAssemblyDir)' == '' ">$(MSBuildThisFileDirectory)..\tasks\</PluginSdkAssemblyDir>
-
+    <PluginSdkAssemblyDir Condition=" '$(PluginSdkAssemblyDir)' == '' ">..\tasks\</PluginSdkAssemblyDir>
     <PluginSdkAssembly Condition=" '$(MSBuildRuntimeType)' == 'Core' ">$(PluginSdkAssemblyDir)net8.0\LethalCompany.Plugin.Sdk.dll</PluginSdkAssembly>
-    <PluginSdkAssembly Condition=" '$(MSBuildRuntimeType)' != 'Core' ">$(PluginSdkAssemblyDir)net48\LethalCompany.Plugin.Sdk.dll</PluginSdkAssembly>
+    <PluginSdkAssembly Condition=" '$(MSBuildRuntimeType)' != 'Core' ">$(PluginSdkAssemblyDir)net472\LethalCompany.Plugin.Sdk.dll</PluginSdkAssembly>
   </PropertyGroup>
 
   <UsingTask TaskName="GeneratePluginInfoCode" AssemblyFile="$(PluginSdkAssembly)" />

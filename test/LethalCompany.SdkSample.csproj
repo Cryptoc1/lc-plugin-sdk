@@ -4,12 +4,11 @@
   <PropertyGroup>
     <Title>Plugin SDK Sample</Title>
     <Description>Test plugin generated using the LethalCompany.Plugin.Sdk</Description>
+    <NoWarn>$(NoWarn);CA1822;</NoWarn>
     <PackageId>LC_SDK_SAMPLE</PackageId>
     <PluginId>cryptoc1.lethalcompany.sdksample</PluginId>
-    <Version>1.0.0</Version>
-    <NoWarn>$(NoWarn);CA1822;</NoWarn>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +17,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PluginSdkAssemblyDir>$(MSBuildThisFileDirectory)..\src\bin\Debug\</PluginSdkAssemblyDir>
+    <PluginSdkAssemblyDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\src\bin\Debug\'))</PluginSdkAssemblyDir>
   </PropertyGroup>
 
   <Import Project="..\src\Sdk\Sdk.targets" />
