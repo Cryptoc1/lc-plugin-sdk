@@ -38,11 +38,14 @@ jobs:
           restore-keys: |
             plugin-cache-${{ runner.os }}-
 
-      - name: restore
-        run: dotnet restore --locked-mode
+      - name: restore sdk
+        run: dotnet restore src/LethalCompany.Plugin.Sdk.csproj --locked-mode
 
       - name: build sdk
         run: dotnet build src/LethalCompany.Plugin.Sdk.csproj --no-restore
+
+      - name: restore sample
+        run: dotnet restore test/LethalCompany.SdkSample.csproj --locked-mode
 
       - name: build sample
         run: dotnet build test/LethalCompany.SdkSample.csproj --no-restore

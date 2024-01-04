@@ -18,9 +18,10 @@ An [MSBuild Sdk](https://learn.microsoft.com/en-us/visualstudio/msbuild/how-to-u
 ## Usage
 
 ### Requirements
-- .NET 8.0
-- VSCode/VS2022
-- Thunderstore
+- MSBuild 17.8.3+
+- .NET 8.0+
+- VSCode/VS2022+
+- Thunderstore/r2modman
 
 To start using the Sdk, create a new Class Library:
 ```bash

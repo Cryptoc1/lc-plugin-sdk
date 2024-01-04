@@ -20,8 +20,9 @@ public sealed class ResolvePluginAssemblies : Microsoft.Build.Utilities.Task
     /// <inheritdoc/>
     public override bool Execute()
     {
-        if (!TryReadAssetsFile(out var assets))
+        if (!TryReadAssetsFile(AssetsFile, out var assets))
         {
+            Log.LogError($"Failed to resolve plugin assemblies, the assets file '{AssetsFile}' could not be read.");
             return false;
         }
 
@@ -29,11 +30,11 @@ public sealed class ResolvePluginAssemblies : Microsoft.Build.Utilities.Task
         return true;
     }
 
-    private bool TryReadAssetsFile([NotNullWhen(true)] out PluginAssetsCollection? assets)
+    private static bool TryReadAssetsFile(string path, [NotNullWhen(true)] out PluginAssetsCollection? assets)
     {
-        if (File.Exists(AssetsFile))
+        if (File.Exists(path))
         {
-            using var file = File.OpenRead(AssetsFile);
+            using var file = File.OpenRead(path);
             return (assets = JsonSerializer.Deserialize(file, SdkJsonContext.Default.PluginAssetsCollection)) is not null;
         }
 
