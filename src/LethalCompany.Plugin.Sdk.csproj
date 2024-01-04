@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
-    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+    <BuildOutputTargetFolder>build</BuildOutputTargetFolder>
     <CopyLocalLockFileAssemblies Condition=" '$(TargetFramework)' != 'net472' ">true</CopyLocalLockFileAssemblies>
     <DevelopmentDependency>true</DevelopmentDependency>
     <Description>A MSBuild Sdk for creating Lethal Company mods.</Description>
@@ -83,5 +83,12 @@
   <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' ">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
+
+  <Target Name="IncludeReferenceCopyLocalPathsInBuildOutputInPackage" BeforeTargets="_GetBuildOutputFilesWithTfm" DependsOnTargets="ResolveReferences;ResolvePackageDependenciesForBuild">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(RuntimeCopyLocalItems->WithMetadataValue('AssetType', 'runtime'))" TargetPath="%(RuntimeCopyLocalItems.DestinationSubDirectory)%(Filename)%(Extension)" />
+      <BuildOutputInPackage Include="@(RuntimeCopyLocalItems->WithMetadataValue('CopyLocal', 'true'))" TargetPath="%(RuntimeCopyLocalItems.DestinationSubDirectory)%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
 
 </Project>
