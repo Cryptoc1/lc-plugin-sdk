@@ -1,0 +1,13 @@
+<!-- 
+  This file is intended to be imported via a `Directory.Solution.targets` adjacent to a plugins `.sln` file.
+
+  It imports Sdk .targets files requried to enable the sdk to function as expected when operating on a solution containing a project using the Sdk:
+    e.g. via, `dotnet restore path/to/solution.sln`, `dotnet publish path/to/solution.sln`
+ -->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="Restore.targets" />
+  <Import Project="Publish.targets" />
+
+</Project>

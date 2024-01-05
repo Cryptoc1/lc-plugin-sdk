@@ -14,8 +14,6 @@
     <PluginAssetsFile>$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)plugin.assets.json</PluginAssetsFile>
     <PluginRestoreOutputs>$(PluginRestoreOutputs);$(PluginAssetsFile);</PluginRestoreOutputs>
     <PluginRestoreOutputs Condition=" '$(PluginLockFile)' != '' ">$(PluginRestoreOutputs)$(PluginLockFile);</PluginRestoreOutputs>
-
-    <ResolveAssemblyReferencesDependsOn>$(ResolveAssemblyReferencesDependsOn)ResolvePluginReferences;</ResolveAssemblyReferencesDependsOn>
   </PropertyGroup>
 
   <!-- 
