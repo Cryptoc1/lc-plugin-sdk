@@ -1,0 +1,49 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Sdk.tasks" Condition=" '$(PluginSdkAssemblyHasBeenImported)' != 'true' " />
+  <Import Project="Common.targets" Condition=" '$(PluginSdkCommonTargetsHasBeenImported)' != 'true' " />
+
+  <PropertyGroup>
+    <PluginSdkRestoreTargetsHasBeenImported>true</PluginSdkRestoreTargetsHasBeenImported>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RestorePluginsWithLockFile Condition=" '$(RestorePluginsWithLockFile)' == '' AND '$(RestorePackagesWithLockFile)' == 'true' ">true</RestorePluginsWithLockFile>
+    <PluginLockFile Condition=" '$(RestorePluginsWithLockFile)' == 'true' AND '$(PluginLockFile)' == '' ">$(MSBuildProjectDirectory)\plugins.lock.json</PluginLockFile>
+    <PluginLockFile Condition=" '$(RestorePluginsWithLockFile)' != 'true' "></PluginLockFile>
+
+    <PluginAssetsFile>$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)plugin.assets.json</PluginAssetsFile>
+    <PluginRestoreOutputs>$(PluginRestoreOutputs);$(PluginAssetsFile);</PluginRestoreOutputs>
+    <PluginRestoreOutputs Condition=" '$(PluginLockFile)' != '' ">$(PluginRestoreOutputs)$(PluginLockFile);</PluginRestoreOutputs>
+
+    <ResolveAssemblyReferencesDependsOn>$(ResolveAssemblyReferencesDependsOn)ResolvePluginReferences;</ResolveAssemblyReferencesDependsOn>
+  </PropertyGroup>
+
+  <!-- 
+    Executes the `RestorePluginDependencies` task to restore `ThunderDependency` items
+   -->
+  <Target Name="RestorePlugins" BeforeTargets="Restore" AfterTargets="_GetAllRestoreProjectPathItems" Inputs="$(MSBuildAllProjects)" Outputs="$(PluginRestoreOutputs)">
+    <ItemGroup>
+      <FileWrites Include="$(PluginLockFile)" Condition=" '$(PluginLockFile)' != '' " />
+      <FileWrites Include="$(PluginAssetsFile)" />
+    </ItemGroup>
+
+    <RestorePluginDependencies CacheDirectory="$(PluginCacheDir)" Dependencies="@(ThunderDependency)" LockedMode="$(RestoreLockedMode)" PluginLockFile="$(PluginLockFile)" WithLockFile="$(RestorePluginsWithLockFile)">
+      <Output PropertyName="_GeneratedAssetsJson" TaskParameter="GeneratedAssetsJson" />
+    </RestorePluginDependencies>
+    <WriteLinesToFile File="$(PluginAssetsFile)" Lines="$(_GeneratedAssetsJson)" Overwrite="true" WriteOnlyWhenDifferent="true" Condition=" '$(_GeneratedAssetsJson)' != '' " />
+  </Target>
+
+  <!-- 
+    Executes the `ResolvePluginAssemblies` task to resolve the reference assemblies of `ThunderDependency` items.
+   -->
+  <Target Name="ResolvePluginReferences" BeforeTargets="CoreCompile" AfterTargets="RestorePlugins;Restore" DependsOnTargets="ResolveProjectReferences">
+    <ResolvePluginAssemblies AssetsFile="$(PluginAssetsFile)">
+      <Output ItemName="_PluginReference" TaskParameter="ResolvedAssemblies" />
+    </ResolvePluginAssemblies>
+
+    <ItemGroup>
+      <Reference Include="@(_PluginReference)" Private="false" />
+    </ItemGroup>
+  </Target>
+
+</Project>

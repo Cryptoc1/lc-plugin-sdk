@@ -22,6 +22,7 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
+    <PublishRelease>true</PublishRelease>
     <TargetFramework>netstandard2.1</TargetFramework>
 
     <!-- analyzers -->

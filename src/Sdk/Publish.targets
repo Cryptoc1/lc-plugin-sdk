@@ -1,0 +1,74 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="Common.targets" Condition=" '$(PluginSdkCommonTargetsHasBeenImported)' != 'true' " />
+
+  <PropertyGroup>
+    <PluginSdkPublishTargetsHasBeenImported>true</PluginSdkPublishTargetsHasBeenImported>
+  </PropertyGroup>
+
+  <!-- NOTE: enforce optimizations in release mode  -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' AND '$(DisableReleaseOptimizations)' != 'true' ">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <IncludeSymbols>false</IncludeSymbols>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <!-- 
+    Configures properties+directories required for publishing a Thunderstore package.
+   -->
+  <Target Name="PrepareForPluginPublish" BeforeTargets="PrepareForPublish;PublishPlugin">
+    <PropertyGroup>
+      <_PublishDir>$([MSBuild]::EnsureTrailingSlash('$(PublishDir)'))</_PublishDir>
+      <PublishDir>$(OutputPath)publish\</PublishDir>
+
+      <PluginStagingDir Condition=" '$(PluginStagingProfile)' != '' ">$(PluginProfileDir)BepInEx\plugins\$(ThunderId)\</PluginStagingDir>
+      <StagePlugin Condition=" '$(StagePlugin)' != 'false' AND '$(PluginStagingProfile)' != '' ">true</StagePlugin>
+
+      <_PluginPackage>$(_PublishDir)$(ThunderId)-$(PluginVersion).zip</_PluginPackage>
+
+      <!-- NOTE: a custom output path was NOT specified, place the archive in 'bin\', rather than 'bin\publish\' (can't place archive in the folder being archived) -->
+      <_PluginPackage Condition=" '$(PublishDir)' == '$(_PublishDir)' ">$(OutputPath)$(ThunderId)-$(PluginVersion).zip</_PluginPackage>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(_PublishDir)" Condition=" '$(StagePlugin)' != 'true' " />
+  </Target>
+
+  <!-- 
+    Copies custom build assets to the publish directory, prior to the default publishing process.
+   -->
+  <Target Name="_CopyToPublishDir" AfterTargets="Publish" BeforeTargets="PublishPlugin">
+    <Copy SourceFiles="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json" DestinationFiles="$(PublishDir)manifest.json" SkipUnchangedFiles="true" Condition=" Exists('$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json') " />
+  </Target>
+
+  <!-- 
+    Creates a Thunderstore package from the content of the default publish directory.
+   -->
+  <Target Name="PublishPlugin" AfterTargets="Publish">
+    <Warning Code="LC001" Text="Plugin was not built in Release mode, users may experience an impact to performance!" Condition=" '$(Configuration)' != 'Release' AND '$(StagePlugin)' != 'true' AND '$(DisableReleaseOptimizations)' != 'true' " />
+
+    <Error Text="Failed to Stage Plugin, PluginStagingProfile directory '$(PluginProfileDir)' does not exist." Condition=" '$(StagePlugin)' == 'true' AND !Exists('$(PluginProfileDir)') " />
+    <MakeDir Directories="$(PluginStagingDir)" />
+
+    <!-- clean -->
+    <ItemGroup>
+      <_PublishFilesToDelete Include="$(PublishDir)\$(AssemblyName).deps.json" />
+      <_PublishFilesToDelete Include="$(PublishDir)\*.pdb" Condition=" '$(Configuration)' == 'Release' " />
+    </ItemGroup>
+    <Delete Files="@(_PublishFilesToDelete)" />
+
+    <ItemGroup>
+      <_PluginFiles Include="$(PublishDir)\**\*.*" />
+      <_PluginStagingDirFiles Include="$(PluginStagingDir)**\*.*" Condition=" '$(StagePlugin)' == 'true' " />
+    </ItemGroup>
+
+    <!-- stage -->
+    <Delete Files="@(_PluginStagingDirFiles)" Condition=" '$(StagePlugin)' == 'true' " />
+    <Copy SourceFiles="@(_PluginFiles)" DestinationFiles="@(_PluginFiles -> '$(PluginStagingDir)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" Condition=" '$(StagePlugin)' == 'true' " />
+
+    <Message Importance="High" Text="$(ThunderId) -> $(PluginStagingDir)" Condition=" '$(StagePlugin)' == 'true' " />
+
+    <!-- package -->
+    <ZipDirectory SourceDirectory="$(PublishDir)" DestinationFile="$(_PluginPackage)" Overwrite="true" Condition=" '$(StagePlugin)' != 'true' " />
+  </Target>
+
+</Project>

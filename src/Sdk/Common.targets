@@ -1,0 +1,56 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <PluginSdkCommonTargetsHasBeenImported>true</PluginSdkCommonTargetsHasBeenImported>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PluginManagerDataDir Condition=" '$(PluginManagerDataDir)' == '' AND '$(PluginManager)' == 'r2modman' ">$(AppData)\r2modmanPlus-local\LethalCompany\</PluginManagerDataDir>
+    <PluginManagerDataDir Condition=" '$(PluginManagerDataDir)' == '' ">$(AppData)\Thunderstore Mod Manager\DataFolder\LethalCompany\</PluginManagerDataDir>
+
+    <PluginCacheDir Condition=" '$(PluginCacheDir)' == '' AND '$(PLUGIN_SDK_CACHE)' != '' ">$([MSBuild]::EnsureTrailingSlash($(PLUGIN_SDK_CACHE)))</PluginCacheDir>
+    <PluginCacheDir Condition=" '$(PluginCacheDir)' == '' ">$(PluginManagerDataDir)cache\</PluginCacheDir>
+    <PluginProfileDir Condition=" '$(PluginStagingProfile)' != '' AND '$(PluginProfileDir)' == '' AND '$(PluginManagerDataDir)' != '' ">$(PluginManagerDataDir)profiles\$(PluginStagingProfile)\</PluginProfileDir>
+
+    <PluginDescription Condition=" '$(PluginDescription)' == '' ">$(Description)</PluginDescription>
+    <PluginId Condition=" '$(PluginId)' == '' ">$(AssemblyName)</PluginId>
+
+    <!-- NOTE: backwards compatibility with renaming PluginInfoTypeAccessModifier -> PluginInfoModifiers -->
+    <PluginInfoTypeModifiers Condition=" '$(PluginInfoTypeModifiers)' == '' ">$(PluginInfoTypeAccessModifier)</PluginInfoTypeModifiers>
+    <PluginInfoTypeModifiers Condition=" '$(PluginInfoTypeModifiers)' == '' ">internal static</PluginInfoTypeModifiers>
+    <PluginInfoTypeName Condition=" '$(PluginInfoTypeName)' == '' ">GeneratedPluginInfo</PluginInfoTypeName>
+
+    <PluginName Condition=" '$(PluginName)' == '' ">$(Title)</PluginName>
+    <PluginName Condition=" '$(PluginName)' == '' ">$(Product)</PluginName>
+    <PluginName Condition=" '$(PluginName)' == '' ">$(AssemblyName)</PluginName>
+
+    <PluginChangeLogFile Condition=" '$(PluginChangeLogFile)' == '' ">CHANGELOG.md</PluginChangeLogFile>
+    <PluginReadMeFile Condition=" '$(PluginReadMeFile)' == '' ">$(PackageReadMeFile)</PluginReadMeFile>
+    <PluginReadMeFile Condition=" '$(PluginReadMeFile)' == '' ">README.md</PluginReadMeFile>
+    <PluginVersion Condition=" '$(PluginVersion)' == '' ">$(Version)</PluginVersion>
+
+    <!-- Thunderstore metadata -->
+    <ThunderDescription Condition=" '$(ThunderDescription)' == '' ">$(PluginDescription)</ThunderDescription>
+    <ThunderId Condition=" '$(ThunderId)' == '' ">$(PackageId)</ThunderId>
+    <ThunderId Condition=" '$(ThunderId)' == '' ">$(PluginId)</ThunderId>
+    <ThunderVersion Condition=" '$(ThunderVersion)' == '' ">$(PluginVersion)</ThunderVersion>
+    <ThunderWebsiteUrl Condition=" '$(ThunderWebsiteUrl)' == '' ">$(PackageProjectUrl)</ThunderWebsiteUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="$(PluginChangeLogFile)" Condition=" '$(PluginChangeLogFile)' != '' AND Exists('$(MSBuildProjectDirectory)\$(PluginChangeLogFile)') ">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+
+    <Content Include="icon.png;$(PluginReadMeFile)">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(ImplicitUsings)' == 'true' OR '$(ImplicitUsings)' == 'enable' ">
+    <Using Include="System.Collections" />
+    <Using Include="BepInEx" />
+    <Using Include="HarmonyLib" />
+  </ItemGroup>
+
+</Project>

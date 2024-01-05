@@ -9,28 +9,29 @@ An [MSBuild Sdk](https://learn.microsoft.com/en-us/visualstudio/msbuild/how-to-u
 - Optimizes Build Defaults
 - Enables Modern Language Features with [`PolySharp`](https://github.com/Sergio0694/PolySharp)
 - References Publicized Binaries from [`LethalAPI.GameLibs`](https://github.com/dhkatz/LethalAPI.GameLibs)
-- References BepInEx packages from the [BepInEx Registry](https://nuget.bepinex.dev/)
+- Restores & Resolves References to Thunderstore Dependencies
 - Creates Thunderstore Packages with `dotnet publish`
-- Stages plugins to local a Thunderstore profile
+- Stages Directly to a Thunderstore/r2modman Profile
 - And More...
 
-
-## Usage
-
-### Requirements
+### Prerequisites
 - MSBuild 17.8.3+
 - .NET 8.0+
 - VSCode/VS2022+
 - Thunderstore/r2modman
 
-To start using the Sdk, create a new Class Library:
+## Getting Started
+
+### Create a Class Library
+
+Create a new Class Library for the plugin:
 ```bash
 $ dotnet new classlib -n {NAME}
 ```
 
-In the new `.csproj`, update the `Sdk="Microsoft.NET.Sdk"` attribute at the top of the file to `Sdk="LethalCompany.Plugin.Sdk/{LATEST-VERSION}"`, and replace any existing content with metadata about the plugin:
+In the new `.csproj`, update the `Sdk="Microsoft.NET.Sdk"` attribute at the top of the file to `Sdk="LethalCompany.Plugin.Sdk/{VERSION}"`, and replace any existing content with metadata about the plugin:
 ```xml
-<Project Sdk="LethalCompany.Plugin.Sdk/...">
+<Project Sdk="LethalCompany.Plugin.Sdk/{VERSION}">
   
   <PropertyGroup>
     <Title>Plugin Example</Title>
@@ -42,7 +43,27 @@ In the new `.csproj`, update the `Sdk="Microsoft.NET.Sdk"` attribute at the top 
 </Project>
 ```
 
-Add a new `.cs` file, and define the plugin:
+***Or***, create a `global.json` file in the root of your solution, and specify the `LethalCompany.Plugin.Sdk`:
+```json
+{
+  "msbuild-sdk": {
+    "LethalCompany.Plugin.Sdk": "{VERSION}"
+  }
+}
+```
+
+In your project file, update the `Sdk` attribute:
+```xml
+<Project Sdk="LethalCompany.Plugin.Sdk">
+  <!-- ... -->
+</Project>
+```
+
+> _For more information on using MSBuild Sdks, see ["How project SDKs are resolved"](https://learn.microsoft.com/en-us/visualstudio/msbuild/how-to-use-project-sdk?view=vs-2022#how-project-sdks-are-resolved)_
+
+### Define Plugin
+
+In your project, add a new `.cs` file to define the `BepInEx` plugin:
 ```csharp
 [BepInPlugin(GeneratedPluginInfo.Identifier, GeneratedPluginInfo.Name, GeneratedPluginInfo.Version)]
 public sealed class SamplePlugin : BaseUnityPlugin
@@ -57,15 +78,15 @@ public sealed class SamplePlugin : BaseUnityPlugin
 > _By default, the generated class is `internal static`, this can be changed using the `<PluginInfoTypeModifiers />` MSBuild property._
 
 
-### Publish to Thunderstore
+## Publish to Thunderstore
 
 > _In order to create a Thunderstore Package, the Sdk requires that `icon.png` and `README.md` files exist at the project root._
 
-> _The location of the `CHANGELOG.md` and `README.md` files can be customized using the `<PluginChangeLogFile />` and `<PluginReadMeFile />` MSBuild properties._
+> _The location of the `CHANGELOG.md` and `README.md` files can be changed using the `<PluginChangeLogFile />` and `<PluginReadMeFile />` MSBuild properties._
 
 In the `.csproj` of the plugin, provide the metadata used to generate a `manifest.json` for publishing:
 ```xml
-<Project Sdk="LethalCompany.Plugin.Sdk/1.0.0">
+<Project Sdk="LethalCompany.Plugin.Sdk">
   
   <PropertyGroup>
     <!-- ... -->
@@ -106,7 +127,7 @@ MSBuild version 17.8.3+195e7f5a3 for .NET
   p".
 ```
 
-#### Staging Plugins
+### Staging Plugins
 
 "Staging" a plugin refers to the process of publishing a plugin directly to a local Thunderstore profile, and is performed by specifiying the `PluginStagingProfile` MSBuild property when publishing:
 ```bash
@@ -115,7 +136,7 @@ dotnet publish -p:PluginStagingProfile="..."
 
 > _It is recommended to set the `<PluginStagingProfile />` MSBuild property in a `.csproj.user` file._
 
-#### Specify Thunderstore Dependencies
+### Specify Thunderstore Dependencies
 
 To specify a dependency on another Thunderstore plugin, use the `ThunderDependency` item:
 ```xml
@@ -124,7 +145,7 @@ To specify a dependency on another Thunderstore plugin, use the `ThunderDependen
 </ItemGroup>
 ```
 
-##### Configure Referenced Assemblies
+#### Configure Referenced Assemblies
 
 When a `ThunderDependency` is specified, the Sdk will restore & resolve assemblies for the dependency. 
 
@@ -142,3 +163,15 @@ Assembly resolution can be configured by specifying glob patterns for the `Exclu
 
 > _When publishing a plugin, the Sdk will use the specified `ThunderDependency` items to produce a value for the `dependencies` key of the generated `manifest.json`._
 
+#### Restore Plugins During Solution Restore
+
+Due to limitiations in how MSBuild handles solution files, the Sdk is unable restore Thunderstore dependencies when directly restoring a solution (e.g. via `dotnet restore example-plugin.sln`).
+
+To workaround this, create a `Directory.Solution.targets` file adjacent to the `.sln` file, that directly imports the `Restore.targets` from the Sdk:
+```xml
+<Project>
+
+  <Import Project="Restore.targets" Sdk="LethalCompany.Plugin.Sdk" />
+
+<Project>
+```
