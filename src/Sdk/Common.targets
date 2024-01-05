@@ -53,4 +53,17 @@
     <Using Include="HarmonyLib" />
   </ItemGroup>
 
+  <!-- 
+    Executes the `ResolvePluginAssemblies` task to resolve the reference assemblies of `ThunderDependency` items.
+   -->
+  <Target Name="ResolvePluginReferences" BeforeTargets="CoreCompile" AfterTargets="RestorePlugins;Restore" DependsOnTargets="ResolveProjectReferences">
+    <ResolvePluginAssemblies AssetsFile="$(PluginAssetsFile)">
+      <Output ItemName="_PluginReference" TaskParameter="ResolvedAssemblies" />
+    </ResolvePluginAssemblies>
+
+    <ItemGroup>
+      <Reference Include="@(_PluginReference)" Private="false" />
+    </ItemGroup>
+  </Target>
+
 </Project>

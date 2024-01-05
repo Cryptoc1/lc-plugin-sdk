@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="Sdk.tasks" Condition=" '$(PluginSdkAssemblyHasBeenImported)' != 'true' " />
   <Import Project="Common.targets" Condition=" '$(PluginSdkCommonTargetsHasBeenImported)' != 'true' " />
+  <Import Project="Sdk.tasks" Condition=" '$(PluginSdkAssemblyHasBeenImported)' != 'true' " />
 
   <PropertyGroup>
     <PluginSdkRestoreTargetsHasBeenImported>true</PluginSdkRestoreTargetsHasBeenImported>
@@ -31,19 +31,6 @@
       <Output PropertyName="_GeneratedAssetsJson" TaskParameter="GeneratedAssetsJson" />
     </RestorePluginDependencies>
     <WriteLinesToFile File="$(PluginAssetsFile)" Lines="$(_GeneratedAssetsJson)" Overwrite="true" WriteOnlyWhenDifferent="true" Condition=" '$(_GeneratedAssetsJson)' != '' " />
-  </Target>
-
-  <!-- 
-    Executes the `ResolvePluginAssemblies` task to resolve the reference assemblies of `ThunderDependency` items.
-   -->
-  <Target Name="ResolvePluginReferences" BeforeTargets="CoreCompile" AfterTargets="RestorePlugins;Restore" DependsOnTargets="ResolveProjectReferences">
-    <ResolvePluginAssemblies AssetsFile="$(PluginAssetsFile)">
-      <Output ItemName="_PluginReference" TaskParameter="ResolvedAssemblies" />
-    </ResolvePluginAssemblies>
-
-    <ItemGroup>
-      <Reference Include="@(_PluginReference)" Private="false" />
-    </ItemGroup>
   </Target>
 
 </Project>
