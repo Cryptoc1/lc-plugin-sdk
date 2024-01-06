@@ -36,14 +36,14 @@
   <!-- 
     Copies custom build assets to the publish directory, prior to the default publishing process.
    -->
-  <Target Name="_CopyToPublishDir" AfterTargets="Publish" BeforeTargets="PublishPlugin">
+  <Target Name="_CopyToPublishDir">
     <Copy SourceFiles="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json" DestinationFiles="$(PublishDir)manifest.json" SkipUnchangedFiles="true" Condition=" Exists('$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json') " />
   </Target>
 
   <!-- 
     Creates a Thunderstore package from the content of the default publish directory.
    -->
-  <Target Name="PublishPlugin" AfterTargets="Publish">
+  <Target Name="PublishPlugin" AfterTargets="Publish" DependsOnTargets="_CopyToPublishDir">
     <Warning Code="LC001" Text="Plugin was not built in Release mode, users may experience an impact to performance!" Condition=" '$(Configuration)' != 'Release' AND '$(StagePlugin)' != 'true' AND '$(DisableReleaseOptimizations)' != 'true' " />
 
     <Error Text="Failed to Stage Plugin, PluginStagingProfile directory '$(PluginProfileDir)' does not exist." Condition=" '$(StagePlugin)' == 'true' AND !Exists('$(PluginProfileDir)') " />

@@ -1,13 +1,9 @@
-<!-- 
-  This file is intended to be imported via a `Directory.Solution.targets` adjacent to a plugins `.sln` file.
-
-  It imports Sdk .targets files requried to enable the sdk to function as expected when operating on a solution containing a project using the Sdk:
-    e.g. via, `dotnet restore path/to/solution.sln`, `dotnet publish path/to/solution.sln`
- -->
-
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Import Project="Restore.targets" />
-  <Import Project="Publish.targets" />
+  <Target Name="_RestorePlugins" BeforeTargets="Restore" AfterTargets="_GetAllRestoreProjectPathItems" Returns="@(_PluginRestoreOutputs)">
+    <MSBuild BuildInParallel="$(RestoreBuildInParallel)" ContinueOnError="$(RestoreContinueOnError)" Projects="@(FilteredRestoreGraphProjectInputItemsWithoutDuplicates)" SkipNonexistentTargets="true" Targets="_RestorePlugins">
+      <Output TaskParameter="TargetOutputs" ItemName="_PluginRestoreOutputs" />
+    </MSBuild>
+  </Target>
 
 </Project>

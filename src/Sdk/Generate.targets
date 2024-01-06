@@ -8,7 +8,7 @@
   <!-- 
     Executes the `GeneratePluginInfoCode` task to generate a type containing plugin metadata defined via MSBuild properties.
    -->
-  <Target Name="_GeneratePluginInfo" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs">
+  <Target Name="GeneratePluginInfo" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs">
     <ItemGroup>
       <Compile Include="$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs" />
       <FileWrites Include="$$(IntermediateOutputPath)$(MSBuildProjectName).PluginInfo.g.cs" />
@@ -23,7 +23,7 @@
   <!-- 
     Executes the `GeneratePluginManifestJson` task to generate the json text of the `manifest.json` used when publishing a Thunderstore package.
    -->
-  <Target Name="_GeneratePluginManifest" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json">
+  <Target Name="GeneratePluginManifest" BeforeTargets="BeforeCompile;CoreCompile" Inputs="$(MSBuildAllProjects)" Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json">
     <ItemGroup>
       <Content Include="$(IntermediateOutputPath)$(MSBuildProjectName).manifest.g.json">
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

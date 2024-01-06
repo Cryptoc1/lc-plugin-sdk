@@ -19,7 +19,7 @@
   <!-- 
     Executes the `RestorePluginDependencies` task to restore `ThunderDependency` items
    -->
-  <Target Name="RestorePlugins" BeforeTargets="Restore" AfterTargets="_GetAllRestoreProjectPathItems" Inputs="$(MSBuildAllProjects)" Outputs="$(PluginRestoreOutputs)">
+  <Target Name="_RestorePlugins" BeforeTargets="Restore" AfterTargets="_GetAllRestoreProjectPathItems" Inputs="$(MSBuildAllProjects)" Outputs="$(PluginRestoreOutputs)">
     <ItemGroup>
       <FileWrites Include="$(PluginLockFile)" Condition=" '$(PluginLockFile)' != '' " />
       <FileWrites Include="$(PluginAssetsFile)" />
@@ -29,6 +29,12 @@
       <Output PropertyName="_GeneratedAssetsJson" TaskParameter="GeneratedAssetsJson" />
     </RestorePluginDependencies>
     <WriteLinesToFile File="$(PluginAssetsFile)" Lines="$(_GeneratedAssetsJson)" Overwrite="true" WriteOnlyWhenDifferent="true" Condition=" '$(_GeneratedAssetsJson)' != '' " />
+  </Target>
+
+  <Target Name="_IsProjectPluginRestoreSupported" Returns="@(_ValidProjectsForPluginRestore)">
+    <ItemGroup>
+      <_ValidProjectsForPluginRestore Include="$(MSBuildProjectFullPath)" />
+    </ItemGroup>
   </Target>
 
 </Project>

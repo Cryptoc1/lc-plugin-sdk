@@ -39,16 +39,16 @@ jobs:
             plugin-cache-${{ runner.os }}-
 
       - name: restore sdk
-        run: dotnet restore src/LethalCompany.Plugin.Sdk.csproj --locked-mode
+        run: dotnet restore --locked-mode
 
       - name: build sdk
-        run: dotnet build src/LethalCompany.Plugin.Sdk.csproj --no-restore
+        run: dotnet build --no-restore
 
       - name: restore sample
-        run: dotnet restore test/LethalCompany.SdkSample.csproj --locked-mode
+        run: dotnet restore sample/sdk-sample.sln --locked-mode
 
       - name: build sample
-        run: dotnet build test/LethalCompany.SdkSample.csproj --no-restore
+        run: dotnet build sample/sdk-sample.sln --no-restore
 
   pack:
     if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/develop')

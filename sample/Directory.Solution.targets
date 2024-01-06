@@ -1,0 +1,5 @@
+<Project>
+
+  <Import Project="..\src\Sdk\Solution.targets" />
+
+</Project>

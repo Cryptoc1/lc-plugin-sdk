@@ -1,6 +1,6 @@
 <Project DefaultTargets="Build"
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition=" '$(MicrosoftCommonPropsHasBeenImported)' != 'true' "/>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition=" '$(UsingMicrosoftNETSdk)' != 'true' OR '$(MicrosoftCommonPropsHasBeenImported)' != 'true' " />
 
   <ItemDefinitionGroup>
     <ThunderDependency>
@@ -41,11 +41,6 @@
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0" PrivateAssets="all" />
-    <PackageReference Include="LethalAPI.GameLibs" Version="45.1.0" PrivateAssets="all" ExcludeAssets="all" GeneratePathProperty="true" NoWarn="NU1701" />
-    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
-
-    <!-- NOTE: no need to reference stdlib -->
-    <Reference Include="$(PkgLethalAPI_GameLibs)\lib\*.dll" Exclude="$(PkgLethalAPI_GameLibs)\lib\mscorlib.dll;$(PkgLethalAPI_GameLibs)\lib\netstandard.dll;$(PkgLethalAPI_GameLibs)\lib\System*.dll;" Private="false" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,6 @@
 using BepInEx.Logging;
 
-namespace LethalCompany.SdkSample.Patches;
+namespace SdkSample.Plugin.Patches;
 
 [HarmonyPatch(typeof(Terminal))]
 public sealed class TerminalPatches

@@ -1,5 +1,5 @@
 ﻿<Project>
-  <Import Project="..\src\Sdk\Sdk.props" />
+  <Import Project="..\..\src\Sdk\Sdk.props" />
 
   <PropertyGroup>
     <Title>Plugin SDK Sample</Title>
@@ -9,6 +9,7 @@
     <PluginId>cryptoc1.lethalcompany.sdksample</PluginId>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <Version>1.0.0</Version>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,9 +17,13 @@
     <!-- <ThunderDependency Include="no00ob-LCSoundTool-1.4.0" /> -->
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Library\SdkSample.Library.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
-    <PluginSdkAssemblyDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\src\bin\Debug\'))</PluginSdkAssemblyDir>
+    <PluginSdkAssemblyDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\src\bin\Debug\'))</PluginSdkAssemblyDir>
   </PropertyGroup>
 
-  <Import Project="..\src\Sdk\Sdk.targets" />
+  <Import Project="..\..\src\Sdk\Sdk.targets" />
 </Project>

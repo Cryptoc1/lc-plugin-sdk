@@ -43,9 +43,16 @@ In the new `.csproj`, update the `Sdk="Microsoft.NET.Sdk"` attribute at the top 
 </Project>
 ```
 
-***Or***, create a `global.json` file in the root of your solution, and specify the `LethalCompany.Plugin.Sdk`:
+_**Or** (recommended)_
+
+Create a `global.json` file in the root of your solution, and specify the `LethalCompany.Plugin.Sdk`:
 ```json
 {
+  "sdk": {
+    "allowPrerelease": false,
+    "rollForward": "latestMajor",
+    "version": "8.0.100"
+  },
   "msbuild-sdk": {
     "LethalCompany.Plugin.Sdk": "{VERSION}"
   }
@@ -167,11 +174,13 @@ Assembly resolution can be configured by specifying glob patterns for the `Exclu
 
 Due to limitiations in how MSBuild handles solution files, the Sdk is unable restore Thunderstore dependencies when directly restoring a solution (e.g. via `dotnet restore example-plugin.sln`).
 
-To workaround this, create a `Directory.Solution.targets` file adjacent to the `.sln` file, that directly imports the `Restore.targets` from the Sdk:
+To workaround this, create a `Directory.Solution.targets` file adjacent to the `.sln` file, that directly imports `Solution.targets` from the Sdk:
 ```xml
 <Project>
 
-  <Import Project="Restore.targets" Sdk="LethalCompany.Plugin.Sdk" />
+  <Import Project="Solution.targets" Sdk="LethalCompany.Plugin.Sdk" />
 
 <Project>
 ```
+
+> _It is recommended to use `global.json` when using `Directory.Solution.targets` to centralize the versioning of `LethalCompany.Plugin.Sdk`._
