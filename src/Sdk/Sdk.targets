@@ -24,7 +24,7 @@
     <Reference Include="$(PkgLethalAPI_GameLibs)\lib\*.dll" Exclude="$(PkgLethalAPI_GameLibs)\lib\mscorlib.dll;$(PkgLethalAPI_GameLibs)\lib\netstandard.dll;$(PkgLethalAPI_GameLibs)\lib\System*.dll;" Private="false" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(DisableAutoReferencePolySharp)' != '' ">
+  <ItemGroup Condition=" '$(DisableAutoReferencePolySharp)' != 'true' ">
     <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
   </ItemGroup>
 
