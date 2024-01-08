@@ -17,15 +17,9 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(DisableAutoReferenceGameLibs)' != 'true' ">
-    <PackageReference Include="LethalAPI.GameLibs" Version="45.1.0" PrivateAssets="all" ExcludeAssets="all" GeneratePathProperty="true" NoWarn="NU1701" />
-
-    <!-- NOTE: no need to reference stdlib -->
-    <Reference Include="$(PkgLethalAPI_GameLibs)\lib\*.dll" Exclude="$(PkgLethalAPI_GameLibs)\lib\mscorlib.dll;$(PkgLethalAPI_GameLibs)\lib\netstandard.dll;$(PkgLethalAPI_GameLibs)\lib\System*.dll;" Private="false" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(DisableAutoReferencePolySharp)' != 'true' ">
-    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
+  <ItemGroup>
+    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" Condition=" '$(DisableAutoReferenceGameLibs)' != 'true' " />
+    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" Condition=" '$(DisableAutoReferencePolySharp)' != 'true' " />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(ImplicitUsings)' == 'true' OR '$(ImplicitUsings)' == 'enable' ">
