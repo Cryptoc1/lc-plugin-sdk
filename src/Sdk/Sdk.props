@@ -31,7 +31,7 @@
     <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0" PrivateAssets="all" />
     <PackageReference Include="LethalAPI.GameLibs" Version="45.1.0" PrivateAssets="all" ExcludeAssets="all" GeneratePathProperty="true" NoWarn="NU1701" />
-    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="all" />
+    <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="all" />
 
     <!-- NOTE: no need to reference stdlib -->
     <Reference Include="$(PkgLethalAPI_GameLibs)\lib\*.dll" Exclude="$(PkgLethalAPI_GameLibs)\lib\mscorlib.dll;$(PkgLethalAPI_GameLibs)\lib\netstandard.dll;$(PkgLethalAPI_GameLibs)\lib\System*.dll;" Private="false" />
