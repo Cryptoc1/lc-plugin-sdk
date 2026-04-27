@@ -20,9 +20,9 @@
       },
       "LethalAPI.GameLibs": {
         "type": "Direct",
-        "requested": "[45.1.0, )",
-        "resolved": "45.1.0",
-        "contentHash": "6Sc+qwfRIxC4/wbGQWpXPvlvLIDDz95M/L7fJ6rz/efOx111r1fw/zxMkKMqmdHai6VS8hE6l8SEWIYU2I6mIg=="
+        "requested": "[49.0.0, )",
+        "resolved": "49.0.0",
+        "contentHash": "KVynBV+Soxjdeg0hPHwiS43yWWtKory5fxCQyFBahDiHIC6m30k6eVxhZJWEnzlWmGPwgc25IieLJUDKcsosTg=="
       },
       "Microsoft.CodeAnalysis.NetAnalyzers": {
         "type": "Direct",
@@ -371,9 +371,6 @@
           "Microsoft.NETCore.Targets": "1.1.0",
           "System.Runtime": "4.3.0"
         }
-      },
-      "lethalcompany.plugin.sdk": {
-        "type": "Project"
       }
     }
   }
